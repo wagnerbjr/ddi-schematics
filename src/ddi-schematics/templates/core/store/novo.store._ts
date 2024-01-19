@@ -1,0 +1,74 @@
+import { Injectable } from "@angular/core";
+import { AbstractStore } from "@ddi-ng/store";
+import { NovoState } from "../types/Novo.state";
+import { NovoActionTypes } from "./novo.actions.types";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class NovoStore extends AbstractStore<NovoState> {
+static defaultState: NovoState = {
+  novo: {
+    data: undefined,
+    isLoading: false,
+    hasErrors: false,
+    errorMessage: ''
+  }
+};
+
+constructor() {
+  super(NovoStore.defaultState, {
+    persist: { session: true, name: 'NovoStore' }
+  });
+}
+
+reducer({ state, type, payload }) {
+  const stores: any = {
+    pending: {
+      novo: {
+        data: undefined,
+        isLoading: true,
+        hasErrors: false,
+        errorMessage: ''
+      }
+    },
+    fulfilled: {
+      novo: {
+        data: payload,
+        isLoading: false,
+        hasErrors: false,
+        errorMessage: ''
+      }
+    },
+    rejected: {
+      novo: {
+        data: undefined,
+        isLoading: false,
+        hasErrors: true,
+        errorMessage: (payload?.status >= 400 && payload?.status < 500 && payload?.error) || ''
+      }
+    }
+  }
+  const options: any = {
+    [`${NovoActionTypes.LISTAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${NovoActionTypes.LISTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${NovoActionTypes.LISTAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${NovoActionTypes.CONSULTAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${NovoActionTypes.CONSULTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${NovoActionTypes.CONSULTAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${NovoActionTypes.INCLUIR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${NovoActionTypes.INCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${NovoActionTypes.INCLUIR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${NovoActionTypes.ALTERAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${NovoActionTypes.ALTERAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${NovoActionTypes.ALTERAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${NovoActionTypes.EXCLUIR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${NovoActionTypes.EXCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${NovoActionTypes.EXCLUIR}_REJECTED`]: () => ({ ...stores.rejected })
+  }
+
+  return !!options[type]
+    ? options[type]()
+    : state;
+}
+}

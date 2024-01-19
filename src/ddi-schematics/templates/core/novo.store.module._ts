@@ -1,0 +1,21 @@
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { NovoService } from "./service/Novo.service";
+import { NovoActions } from "./store/novo.actions";
+import { NovoStore } from "./store/novo.store";
+
+@NgModule({
+  imports: [CommonModule],
+  providers: [
+    NovoService,
+    NovoActions,
+    NovoStore
+  ]
+})
+export class NovoStoreModule {
+  constructor(
+    protected novoService: NovoService,
+    protected novoActions: NovoActions,
+    protected novoStore: NovoStore
+  ) {}
+}

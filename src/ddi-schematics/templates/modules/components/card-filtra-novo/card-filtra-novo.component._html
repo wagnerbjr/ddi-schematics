@@ -1,0 +1,111 @@
+<div class="card-filtra-novo-container">
+  <div *ngIf="!!toastrCardFiltra" class="alert-message">
+    <app-prv-toastr
+      [toastrInfo]="toastrCardFiltra"
+      [autoDestroy]="false"
+      [destroyOnClick]="false"
+      [borderShape]="'square'"
+    ></app-prv-toastr>
+  </div>
+
+  <div class="card-inputs-container">
+    <div class="input-field-wrapper">
+     <!-- <label
+        for="nome"
+        id="nome-label"
+        class="input-label"
+      >Nome: </label>
+      <input
+        id="nome"
+        type="text"
+        class="input-field"
+        maxlength="40"
+        [(ngModel)]="formFields.nome"
+        (ngModelChange)="handleChange()"
+        (change)="handleChange()"
+      >
+    </div>
+
+    <div class="input-field-wrapper">
+      <label
+        for="situacao-field"
+        id="situacao-label"
+        class="input-label"
+      >Situação: </label>
+      <ng-select
+        id="situacao-field"
+        class="select-field"
+        [items]="situacaoOptions"
+        [(ngModel)]="formFields.situacao"
+        (onModelChange)="handleChange()"
+        (change)="handleChange()"
+        #situacao
+      ></ng-select>
+    </div>
+
+    <div class="input-field-wrapper">
+      <label
+        for="regiao-exames-field"
+        id="regiao-exames-label"
+        class="input-label"
+      >Região de Exame: </label>
+      <ng-select
+        id="criteria-field"
+        class="select-field"
+        [items]="regiaoExamesOptions"
+        [(ngModel)]="formFields.regiaoExames"
+        (onModelChange)="handleChange()"
+        (change)="handleChange()"
+        #situacao
+      ></ng-select>
+    </div>
+
+    <div class="input-field-wrapper">
+      <label
+        for="qtdExaminador"
+        id="qtd-examinador-label"
+        class="input-label"
+      >Quantidade Examinador: </label>
+      <input
+        id="qtdExaminador"
+        type="text"
+        class="input-field input-examinador"
+        mask="0*"
+        maxlength="2"
+        [(ngModel)]="formFields.qtdExaminador"
+        (ngModelChange)="handleChange()"
+        (change)="handleChange()"
+      >
+    </div>
+
+    <div class="input-field-wrapper">
+      <label
+        for="distribuicao-field"
+        id="distribuicao-label"
+        class="input-label"
+      >Participa Distribuição: </label>
+      <ng-select
+        id="distribuicao-field"
+        class="select-field"
+        [items]="distribuicaoOptions"
+        [(ngModel)]="formFields.distribuicao"
+        (onModelChange)="handleChange()"
+        (change)="handleChange()"
+        #situacao
+      ></ng-select>
+    </div>
+    -->
+  </div>
+  <div class="card-footer-container">
+    <div class="card-buttons-container">
+      <div class="button-wrapper">
+        <button
+          type="button"
+          class="btn btn-primary col-auto button-localizar"
+          [disabled]="localizarDisabled"
+          (click)="handleClick()"
+        >LOCALIZAR</button>
+      </div>
+    </div>
+  </div>
+</div>

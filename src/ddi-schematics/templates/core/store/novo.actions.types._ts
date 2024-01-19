@@ -1,0 +1,9 @@
+export enum NovoActionTypes {
+  INCLUIR = "novo/INCLUIR",
+  CONSULTAR = "novo/CONSULTAR",
+  ALTERAR = "novo/ALTERAR",
+  EXCLUIR = "novo/EXCLUIR",
+  LISTAR = "novo/LISTAR",
+  LIMPAR = "novo/LIMPAR",
+  RELATORIO = "novo/RELATORIO"
+}

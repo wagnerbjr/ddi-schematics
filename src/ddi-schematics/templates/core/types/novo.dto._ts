@@ -1,0 +1,5 @@
+export interface Novo {
+  codNovo: number,
+  abreviaturaNovo: string,
+  descricaoNovo: string
+}

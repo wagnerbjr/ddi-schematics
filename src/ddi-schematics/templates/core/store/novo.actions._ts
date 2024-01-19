@@ -1,0 +1,19 @@
+import { Injectable } from "@angular/core";
+import { AbstractAction } from "@ddi-ng/store";
+import { DominioService } from "../service/novo.service";
+import { DominioActionTypes } from "./novo.actions.types";
+
+@Injectable()
+export class DominioActions extends AbstractAction {
+  constructor(private service: DominioService) {
+    super();
+  }
+
+  listaNovo(): void {
+    this.dispatch({
+      type: DominioActionTypes.LISTAR,
+      payload: this.service.listaNovo()
+    })
+  }
+
+}

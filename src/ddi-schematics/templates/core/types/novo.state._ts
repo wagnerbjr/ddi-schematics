@@ -1,0 +1,9 @@
+import { Novo } from "./novo.dto"
+
+export interface NovoState {
+  novo: {
+    data: Novo | Novo[] | undefined,
+    isLoading: boolean,
+    hasErrors: boolean,
+    errorMessage: string
+  }

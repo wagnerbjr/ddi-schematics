@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "extends": ["@schematics/angular"],
+  "schematics": {
+    "ng-new": {
+      "description": "A new project with schematic.",
+      "factory": "./ddi-schematics/index#ddiSchematics",
+      "schema": "./ddi-schematics/schema.json"
+    }
+  }
+}

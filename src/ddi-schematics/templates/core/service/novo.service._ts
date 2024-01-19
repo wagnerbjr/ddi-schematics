@@ -1,0 +1,15 @@
+import { Injectable } from "@angular/core";
+import { DefaultHeaders, DetranHttpService, GET } from "@ddi-ng/http";
+import { Novo } from "../types/novo.dto";
+
+@Injectable()
+@DefaultHeaders({
+  'Content-Type': 'application/json'
+})
+export class DominioService extends DetranHttpService {
+  @GET('/dominio/lista-novo')
+  listaNovo(
+  ): Promise<Dominio[]> {
+    return null;
+  }
+}

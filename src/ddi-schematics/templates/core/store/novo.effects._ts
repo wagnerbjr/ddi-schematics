@@ -1,0 +1,17 @@
+import { Injectable } from "@angular/core";
+import { AbstractEffect } from "@ddi-ng/store";
+import { NovoActionTypes } from "./novo.actions.types";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class NovoEffects extends AbstractEffect {
+constructor() {
+  super();
+
+  this.registerAfterEffects({
+    type: `${NovoActionTypes.LISTAR}_FULFILLED`,
+    effect: () => {}
+  });
+}
+}

@@ -1,0 +1,163 @@
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { NovoActionTypes } from '@core/bancas/store/bancas.actions.types';
+import { NovoLista } from '@core/bancas/types/banca-lista.dto';
+import { PrvUtil } from '@core/utils/prv.util';
+import { Action } from '@ddi-ng/layout';
+import { ColumnType, TableColumn } from '@ddi-ng/layout/lib/table/_types';
+import { PermissaoService } from '@ddi-ng/permissao';
+
+@Component({
+  selector: 'app-card-lista-bancas',
+  templateUrl: './card-lista-bancas.component.html',
+  styleUrls: ['./card-lista-bancas.component.scss']
+})
+export class CardListaNovoComponent implements OnInit, OnChanges {
+
+  @Input() listaNovo: NovoLista[] = [];
+  @Input() pageInfos: any = null;
+
+  @Output() pageInfosChange: EventEmitter<{
+    pageSize: number,
+    pageNum: number
+  }> = new EventEmitter();
+  @Output() rowCLickEvent: EventEmitter<any> = new EventEmitter();
+  @Output() menuClickEvent: EventEmitter<any> = new EventEmitter();
+  @Output() redirectEvent: EventEmitter<NovoActionTypes> = new EventEmitter();
+
+  public colunas: any[] = [];
+
+  constructor(
+    private permissaoService: PermissaoService
+  ) { }
+
+  ngOnInit() {
+    this.colunas = this.montaColunas();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    this.colunas = this.montaColunas();
+  }
+
+  public handleMenuClick($event): void {
+    const actionOptions: Map<string, Function> = new Map([
+      ['consultar-banca', (): void =>  this.exibePageConsultarNovo($event.row)],
+      ['desativar-banca', (): void => this.emiteDesativarNovoEvent($event.row)],
+      ['reativar-banca', (): void => this.emiteReativarNovoEvent($event.row)]
+    ]);
+
+    actionOptions.get($event.action.id)?.bind(this)($event.row);
+    return;
+  }
+
+  public handleRowClick($event: any): void {
+    this.rowCLickEvent.emit($event.nroIntRota);
+  }
+
+  public exibePageConsultarNovo(row: NovoLista) {
+    this.menuClickEvent.emit({
+      banca: row,
+      menuOption: NovoActionTypes.CONSULTAR
+    });
+  }
+
+  public emiteDesativarNovoEvent(row: NovoLista) {
+    this.menuClickEvent.emit({
+      nroIntRota: row.nroIntRota,
+      menuOption: NovoActionTypes.EXCLUIR
+    });
+  }
+
+  public emiteReativarNovoEvent(row: NovoLista) {
+    this.menuClickEvent.emit({
+      nroIntRota: row.nroIntRota,
+      menuOption: NovoActionTypes.ALTERAR
+    });
+  }
+
+  private montaColunas(): TableColumn[] {
+    const actionOptions: Action[] = [
+      {
+        id: 'consultar-banca',
+        show: true,
+        label: 'Detalhes',
+        pathForList: ''
+      },
+      {
+        id: 'desativar-banca',
+        show: this.permissaoDesativar,
+        label: 'Desativar',
+        pathForList: 'isPodeDesativar'
+      },
+      {
+        id: 'reativar-banca',
+        show: this.permissaoDesativar,
+        label: 'Reativar',
+        pathForList: 'isPodeReativar'
+      }
+    ];
+    return [
+      {
+        type: 'Actions' as ColumnType,
+        isSmall: true,
+        hasEffect: false,
+        hide: false,
+        menuAction: {
+          dropdownPosition: 'right',
+          pathsForList: ['isPodeDesativar', 'isPodeReativar'],
+          actions: actionOptions
+        }
+      },
+      {
+        title: 'Novo',
+        dataPath: 'nome',
+        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
+      },
+      {
+        title: 'Região de Exame',
+        dataPath: 'regiaoExames',
+        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
+      },
+      {
+        title: 'Quantidade Examinador',
+        dataPath: 'qtdExaminador',
+        transform: (valor: number) => this.trataValorNaoInformado(valor)
+      },
+      {
+        title: 'Situação',
+        dataPath: 'situacao',
+        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
+      },
+      {
+        title: 'Participa Distribuição',
+        dataPath: 'distribuicao',
+        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
+      }
+    ];
+  }
+
+  private trataValorNaoInformado(valor: any): string {
+    return ['', null, undefined, ' '].includes(valor) ? 'Não Informado' : valor;
+  }
+
+  public imprimirEvent() {
+    this.redirectEvent.emit(NovoActionTypes.IMPRIMIR);
+  }
+
+  public handlePageChange($event): void {
+    this.pageInfos = {
+      ...this.pageInfos,
+      pageNum: parseInt($event.pagina),
+      pageSize: $event.tamanho
+    };
+
+    this.pageInfosChange.emit(this.pageInfos);
+  }
+
+  get totalRegistros(): number {
+    return this.listaNovo[0]?.totalRegistros;
+  }
+
+  get permissaoDesativar(): boolean {
+    return this.permissaoService.validarPermissao("ROTA", "ALTERA", "PRV");
+  }
+}

@@ -1,0 +1,46 @@
+@import '@ddi/bootstrap/scss/detran/variables';
+
+.card-lista-novo-container {
+
+  .table-container{
+    background-color: $white;
+    box-shadow: -2px -0.5px 6px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+
+    ::ng-deep ddi-table .table-wrapper {
+      box-shadow: none;
+      border: none;
+    }
+
+    .button-print-wrapper{
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: row;
+      width: 100%;
+
+      .icon-impressao {
+        font-size: 25px;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 100%;
+      }
+
+      .botao-impressao {
+        padding-right: 15px;
+        padding-top: 15px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .contorno-icone {
+        background-color: $white;
+        border-radius: 100%;
+      }
+
+      .span-spaced{
+        margin-left: 4px;
+      }
+    }
+  }
+}
