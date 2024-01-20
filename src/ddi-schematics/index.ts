@@ -1,5 +1,17 @@
 import { basename, dirname, normalize, Path, strings } from "@angular-devkit/core";
-import { apply, chain, externalSchematic, MergeStrategy, mergeWith, move, Rule, SchematicContext, template, Tree, url } from '@angular-devkit/schematics';
+import {
+	apply,
+	chain,
+	MergeStrategy,
+	mergeWith,
+	move,
+	renameTemplateFiles,
+	Rule,
+	SchematicContext,
+	template,
+	Tree,
+	url
+} from '@angular-devkit/schematics';
 
 //import { templateInclude } from '../lib/include';
 
@@ -137,19 +149,73 @@ export function subscriptionComponent(_options: any): Rule {
       _options.name = basename(_options.name as Path);
       _options.path = normalize('/' + dirname((_options.path + '/' + _options.name) as Path));
 
-      const templateSource = apply(
-          url('./files'), [
+      const templateSourceModulePage = apply(
+          url('./files/modules/pages'), [
+            renameTemplateFiles(),
               template({
+                  ...strings,
                   ..._options,
-                  classify: strings.classify,
-                  dasherize: strings.dasherize,
               }),
-              move(_options.path as string),
+              move(_options.path+'/modules/'+_options.name+'/pages' as string),
           ]);
+      
+      const templateSourceModuleComponentLista = apply(
+        url('./files/modules/components/card-lista'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/modules/'+_options.name+'/components/card-lista' as string),
+        ]);
+
+      const templateSourceModuleComponentFiltra = apply(
+        url('./files/modules/components/card-filtra'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/modules/'+_options.name+'/components/card-filtra' as string),
+        ]);
+
+      const templateSourceCoreComponentService = apply(
+        url('./files/core/service'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/core/'+_options.name+'/service' as string),
+        ]); 
+
+      const templateSourceCoreComponentStore = apply(
+        url('./files/core/store'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/core/'+_options.name+'/store' as string),
+        ]);
+
+        const templateSourceCoreComponentTypes = apply(
+          url('./files/core/types'), [
+            renameTemplateFiles(),
+              template({
+                  ...strings,
+                  ..._options,
+              }),
+              move(_options.path+'/core/'+_options.name+'/types' as string),
+          ]);  
 
       return chain([
-          externalSchematic('@schematics/angular', 'component', _options),
-          mergeWith(templateSource, MergeStrategy.Overwrite),
+          mergeWith(templateSourceCoreComponentService, MergeStrategy.Overwrite),
+          mergeWith(templateSourceCoreComponentStore, MergeStrategy.Overwrite),
+          mergeWith(templateSourceCoreComponentTypes, MergeStrategy.Overwrite),
+          mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
+          mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
+          mergeWith(templateSourceModulePage, MergeStrategy.Overwrite)
       ]);
   };
 }

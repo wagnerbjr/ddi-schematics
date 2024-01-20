@@ -1,0 +1,25 @@
+<div
+  *ngIf="!!lista<%= camelize(name) %>.length"
+  class="card-lista-<%= dasherize(name) %>-container"
+>
+    <div class="table-container">
+      <div class="button-print-wrapper">
+        <div (click)="imprimirEvent()" class="botao-impressao">
+          <span class="contorno-icone"><i class="di di-print icon-impressao"></i></span>
+          <span class="span-spaced">Imprimir</span>
+        </div>
+      </div>
+      <ddi-table
+        [rowClickable]="true"
+        [columns]="colunas"
+        [data]="lista<%= dasherize(name) %>"
+        [pageSize]="pageInfos.pageSize"
+        [currentPage]="pageInfos.pageNum"
+        [collectionSize]="totalRegistros"
+        (pageChange)="handlePageChange($event)"
+        (rowClick)="handleRowClick($event)"
+        (itemMenuClick)="handleMenuClick($event)"
+      >
+      </ddi-table>
+    </div>
+  </div>

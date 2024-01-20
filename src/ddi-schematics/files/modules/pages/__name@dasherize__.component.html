@@ -1,0 +1,56 @@
+<div class="lista-<%= dasherize(name) %>-container">
+  <div *ngIf="permissaoConsulta; else noPermission">
+    <div class="navigation-container">
+      <div class="navigation-wrapper">
+        <div class="navigation-item" *ngFor="let item of navigation">
+          <span (click)="item.onClick()">{{ item.text }}</span>
+          <span *ngIf="navigation.indexOf(item) !== navigation.length - 1">/</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngFor="let toastr of toastrs">
+      <app-prv-toastr
+        [toastrInfo]="toastr"
+        [autoDestroy]="false"
+        (clearToastr)="clearToastr()"
+      ></app-prv-toastr>
+    </div>
+
+    <div class="header-container">
+      <h2 class="header-page">PESQUISAR <%= capitalize(name) %></h2>
+      <div class="card-buttons-container">
+        <div class="button-wrapper">
+          <button
+            type="button"
+            class="btn btn-primary col-auto button-criar"
+            [hidden]="!permissaoInclusao"
+            (click)="handleNovaBancaClicked()"
+          >NOVA BANCA</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="lista-<%= dasherize(name) %>-wrapper">
+      <app-card-filtra-<%= dasherize(name) %>
+        [filtrosOnBuffer]="filtros"
+        (clearErrorsEvent)="handleClearErrors()"
+        (toastrs)="handleToastr($event)"
+        (filtros)="handleFiltros($event)"
+        (clearListEvent)="clearToastr()"
+      ></app-card-filtra-<%= dasherize(name) %>>
+      <app-card-lista-<%= dasherize(name) %>
+        [listaNovo]="lista<%= dasherize(name) %>"
+        [(pageInfos)]="pageInfos"
+        (pageInfosChange)="handlePagination($event)"
+        (rowCLickEvent)="handleRowCLick($event)"
+        (menuClickEvent)="menuClickHandler($event)"
+        (redirectEvent)="redirectEvent($event)"
+      ></app-card-lista-<%= dasherize(name) %>>
+    </div>
+  </div>
+  <ng-template #noPermission>
+    <span>Você não tem permissao para acessar essa funcionalidade.</span>
+  </ng-template>
+</div>
+<ddi-loader [isLoading]="isLoading"></ddi-loader>
