@@ -12,7 +12,7 @@
       <ddi-table
         [rowClickable]="true"
         [columns]="colunas"
-        [data]="listanovo"
+        [data]="listaNovo"
         [pageSize]="pageInfos.pageSize"
         [currentPage]="pageInfos.pageNum"
         [collectionSize]="totalRegistros"

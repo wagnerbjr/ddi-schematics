@@ -33,12 +33,11 @@
 
     <div class="lista-novo-wrapper">
       <app-card-filtra-novo
-        [listaRegiaoExame]="listaRegiaoExame"
         [filtrosOnBuffer]="filtros"
         (clearErrorsEvent)="handleClearErrors()"
-        (toastrs)="handleToastrs($event)"
+        (toastrs)="handleToastr($event)"
         (filtros)="handleFiltros($event)"
-        (clearListEvent)="handleClearList()"
+        (clearListEvent)="clearToastr()"
       ></app-card-filtra-novo>
       <app-card-lista-novo
         [listaNovo]="listaNovo"
