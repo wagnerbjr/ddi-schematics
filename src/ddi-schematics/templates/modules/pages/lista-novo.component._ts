@@ -1,405 +1,57 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NovoActions } from '@core/novo/store/novo.actions';
-import { NovoActionTypes } from '@core/novo/store/novo.actions.types';
 import { NovoStore } from '@core/novo/store/novo.store';
-import { NovoLista } from '@core/novo/types/novo-lista.dto';
 import { NovoState } from '@core/novo/types/novo.state';
-import { PrvRoutesLibrary } from '@core/prv-routes/prv-routes.library';
-import { regiaoExameActions } from '@core/regiao-exame/store/regiao-exame.actions';
-import { regiaoExameStore } from '@core/regiao-exame/store/regiao-exame.store';
-import { RegiaoExame } from '@core/regiao-exame/types/regiao-exame.dto';
-import { regiaoExameState } from '@core/regiao-exame/types/regiao-exame.state';
+import { NovoListaDto } from '@core/novo/types/novo-lista.dto';
 import { Toastr } from '@core/types/toastr.type';
 import { ErrorHandlerUtil } from '@core/utils/error-handler.util';
-import { PrvUtil } from '@core/utils/prv.util';
 import { PermissaoService } from '@ddi-ng/permissao';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ModalConfirmacaoComponent } from 'app/shared/components/modals/modal-confirmacao/modal-confirmacao.component';
 import { TipoMensagemEnum } from 'app/shared/enums/tipe-mensagem.enum';
 import { Subscription } from 'rxjs';
-import { ModalIncluirNovoComponent } from '../../components/modal-incluir-novo/modal-incluir-novo.component';
 
 @Component({
-  selector: 'app-lista-novo',
+  selector: 'app-novo',
   templateUrl: './lista-novo.component.html',
   styleUrls: ['./lista-novo.component.scss']
 })
-export class ListaNovoComponent implements OnInit, OnDestroy {
-
-  public listaRegiaoExame: RegiaoExame[] = [];
-  public listaNovo: NovoLista[] = [];
+export class novoComponent {
   public toastrs: Toastr[] = [];
-  public filtros: any = null;
-
-  public navigation = [
-    {
-      text: 'Início',
-      onClick: () => this.router.navigate(['/home'])
-    },
-    {
-      text: 'Pesquisa de Novo',
-      onClick: () => null
-    }
+  public isPrinting: boolean = false;
+  public novoDTO: novoDTO[] = [];
+  public navigation: { text: string, onClick: Function }[] = [
+    { text: 'Início', onClick: () => this.goHome() },
+    { text: 'Lista de Motivos de Cancelamento de Turma', onClick: () => null }
   ];
 
-  public pageInfos: any = {
-    pageSize: 10,
-    pageNum: 1
-  };
-
-  private regiaoExameSubscription: Subscription = null;
   private novoSubscription: Subscription = null;
-  private readonly OPTIONS_MODAL: NgbModalOptions = {
-    backdrop: 'static',
-    keyboard: false,
-    size: 'md'
-  }
 
   constructor(
     private router: Router,
-    private permissaoService: PermissaoService,
-    private regiaoExameActions: regiaoExameActions,
-    private regiaoExameStore: regiaoExameStore,
     private novoActions: NovoActions,
     private novoStore: NovoStore,
-    private modalService: NgbModal
+    private permissaoService: PermissaoService,
   ) { }
 
-  public ngOnInit() {
-    this.getPaginationBuffer();
-    this.getFilterBuffer();
-    this.refreshList();
-
-    this.requestRegiaoExame();
+  ngOnInit(): void {
+    this.requestListanovo();
   }
 
-  public ngOnDestroy(): void {
-    this.stopSubscriptions();
-    this.setFilterBuffer();
+  public goHome(): void {
+    this.router.navigate(['/home']);
   }
 
-  private isAtiva(novo: NovoLista): boolean {
-    return novo.situacao == 'Ativo';
-  }
-
-  private atualizaNovoOnTable(): void {
-    this.listaNovo
-      .forEach((novo: NovoLista) => {
-        Object.assign(novo, {
-          isPodeDesativar: this.isAtiva(novo),
-          isPodeReativar: !this.isAtiva(novo)
-        })
-      });
-  }
-
-  private requestDesativarNovo(nroIntRota: number): Promise<void> {
-    this.novoSubscription?.unsubscribe();
-    this.novoActions.exclui(nroIntRota);
-
-    return new Promise((resolve, reject) => {
-      this.novoSubscription = this.novoStore
-        .state$
-        .subscribe((data: NovoState) => {
-          if (data.novo.hasErrors) {
-            const rawMessage: string = data.novo.errorMessage;
-
-            this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
-            this.novoSubscription?.unsubscribe();
-            reject();
-            return;
-          }
-          if (!data.novo.isLoading) {
-            this.exibeToastr('Novo foi desativada.', TipoMensagemEnum.SUCESSO);
-            this.novoSubscription?.unsubscribe();
-            resolve();
-          }
-      })
-    });
-  }
-
-  private requestReativarNovo(nroIntRota: number): Promise<void> {
-    this.novoSubscription?.unsubscribe();
-    this.novoActions.reativa(nroIntRota);
-
-    return new Promise((resolve, reject) => {
-      this.novoSubscription = this.novoStore
-        .state$
-        .subscribe((data: NovoState) => {
-          if (data.novo.hasErrors) {
-            const rawMessage: string = data.novo.errorMessage;
-
-            this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
-            this.novoSubscription?.unsubscribe();
-            reject();
-            return;
-          }
-          if (!data.novo.isLoading) {
-            this.exibeToastr('Novo foi reativada.', TipoMensagemEnum.SUCESSO);
-            this.novoSubscription?.unsubscribe();
-            resolve();
-          }
-      })
-    });
-  }
-
-  private requestRegiaoExame(): Promise<void> {
-    this.regiaoExameSubscription?.unsubscribe();
-    this.regiaoExameActions.listaRegiaoExame();
-
-    return new Promise((resolve, reject) => {
-      this.regiaoExameSubscription = this.regiaoExameStore
-        .state$
-        .subscribe((data: regiaoExameState) => {
-          if (data.regiaoExame.hasErrors){
-            const rawMessage: string = data.regiaoExame.errorMessage;
-
-            this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
-            this.regiaoExameSubscription?.unsubscribe();
-            reject();
-            return;
-          }
-          if (data.regiaoExame.data) {
-            const payload: RegiaoExame | RegiaoExame[] = data.regiaoExame.data
-
-            this.listaRegiaoExame = Array.isArray(payload) ? payload : [payload];
-            this.regiaoExameSubscription?.unsubscribe();
-            resolve();
-          }
-      })
-    });
-  }
-
-  private requestListaNovo(): Promise<void> {
-    this.novoSubscription?.unsubscribe();
-    this.novoActions.listaPesquisarNovo(
-      this.pageInfos.pageNum,
-      this.pageInfos.pageSize,
-      this.filtros.nome,
-      this.filtros.situacao,
-      this.filtros.regiaoExames,
-      this.filtros.qtdExaminador,
-      this.filtros.distribuicao
-    );
-
-    return new Promise((resolve, reject) => {
-      this.novoSubscription = this.novoStore
-        .state$
-        .subscribe((data: NovoState) => {
-          if (data.novo.hasErrors) {
-            const rawMessage: string = data.novo.errorMessage;
-
-            this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
-            this.novoSubscription?.unsubscribe();
-            reject();
-            return;
-          }
-          if (data.novo.data) {
-            const payload: NovoLista | NovoLista[] = data.novo.data
-
-            this.listaNovo = Array.isArray(payload) ? payload : [payload];
-            this.novoSubscription?.unsubscribe();
-            this.atualizaNovoOnTable();
-            resolve();
-          }
-      })
-    });
-  }
-
-  private requestImprimirNovo(): void {
-    this.novoSubscription?.unsubscribe();
-    this.novoActions.imprimirListaNovo(
-      this.filtros.nome,
-      this.filtros.situacao,
-      this.filtros.regiaoExames,
-      this.filtros.qtdExaminador,
-      this.filtros.distribuicao
-    );
-
-    this.novoSubscription = this.novoStore.state$.subscribe((data: NovoState) => {
-      if (data.novo.hasErrors) {
-        const rawMessage: any = data.novo.errorMessage;
-
-        const decoder: TextDecoder = new TextDecoder();
-
-        const decodedMessage: string = !("TextDecoder" in window)
-          ? PrvUtil.arrayBufferToString(rawMessage)
-          : decoder.decode(rawMessage);
-
-        this.exibeToastr(
-          ErrorHandlerUtil.getMessage(decodedMessage),
-          ErrorHandlerUtil.getStatus(decodedMessage)
-        );
-
-        this.novoSubscription?.unsubscribe();
-        return;
-      }
-
-      if (data.novo.data) {
-        const url = window.URL.createObjectURL(new Blob([data.novo.data as any], { type: 'application/pdf' }));
-        window.open(url);
-        this.novoSubscription?.unsubscribe();
-      }
-    });
-  }
-
-  public handleNovaNovoClicked(): void {
-    const modal: NgbModalRef = this.modalService.open(ModalIncluirNovoComponent, this.OPTIONS_MODAL);
-
-    modal.result
-      .then(() => {
-        this.exibeToastr(
-          'Novo foi incluída.',
-          TipoMensagemEnum.SUCESSO
-        );
-
-        this.requestListaNovo();
-      })
-      .catch(() => null);
-  }
-
-  public handleClearErrors(): void {
-    this.clearToastr();
-  }
-
-  public handleToastrs($event: Toastr | Toastr[]): void {
-    if (!$event) {
-      return;
-    }
-
-    const toastrs: Toastr[] = Array.isArray($event) ? $event : [$event];
-
-    toastrs.forEach((toastr: Toastr) => {
-      this.exibeToastr(toastr.mensagem, toastr.status);
-    });
-
-    return;
-  }
-
-  public handleClearList(): void {
-    this.listaNovo = [];
-  }
-
-  public handleFiltros($event: any): void {
-    const gerenciaFiltros: Function = (filtros: any) => {
-      this.pageInfos.pageSize = this.pageInfos.pageSize || 10;
-      this.pageInfos.pageNum = 1;
-
-      this.setPaginationBuffer();
-
-      return {
-        pageSize: this.pageInfos.pageSize,
-        pageNum: this.pageInfos.pageNum,
-        nome: filtros.nome,
-        situacao: [undefined, null].includes(filtros.situacao)
-          ? null
-          : filtros.situacao,
-        regiaoExames: [undefined, null].includes(filtros.regiaoExames)
-          ? null
-          : filtros.regiaoExames,
-        qtdExaminador: filtros.qtdExaminador,
-        distribuicao: [undefined, null].includes(filtros.distribuicao)
-          ? null
-          : filtros.distribuicao
-      }
-    }
-
-    this.filtros = gerenciaFiltros($event);
-
-    this.requestListaNovo();
-
-    this.clearToastr();
-  }
-
-  public handlePagination($event: any) {
-    const gerenciaFiltros: Function = (filtros: any) => {
-      this.pageInfos.pageSize = filtros.pageSize
-        ? filtros.pageSize
-        : this.filtros?.pageSize || this.pageInfos.pageSize;
-      this.pageInfos.pageNum = filtros.pageNum
-        ? filtros.pageNum
-        : this.filtros?.pageNum || this.pageInfos.pageNum;
-
-      this.setPaginationBuffer();
-
-      return {
-        ...this.filtros,
-        pageSize: this.pageInfos.pageSize,
-        pageNum: this.pageInfos.pageNum
-      };
-    };
-
-    this.filtros = gerenciaFiltros($event);
-
-    this.requestListaNovo();
-
-    window.scrollTo(0, 0);
-  }
-
-  public handleRowCLick(nroIntRota: number): void {
-    this.consultarNovo(nroIntRota);
-  }
-
-  public menuClickHandler($event: any): void {
-    const menuOptions: Map<NovoActionTypes, Function> = new Map([
-      [NovoActionTypes.CONSULTAR, () => this.consultarNovo($event.novo.nroIntRota)],
-      [NovoActionTypes.EXCLUIR, () => this.exibeModalConfirmacaoDesativarNovo($event.nroIntRota)],
-      [NovoActionTypes.ALTERAR, () => this.exibeModalConfirmacaoReativarNovo($event.nroIntRota)]
-    ])
-
-    this.clearToastr();
-
-    return menuOptions.get($event.menuOption)?.bind(this)();
-  }
-
-  private consultarNovo(nroIntNovo: number): void {
-    this.router.navigate(
-      [PrvRoutesLibrary.BANCA.CONSULTA.setPathParams(nroIntNovo).getUrl()]
+  public handleToastr(toastr): void {
+    this.exibeToastr(
+      toastr.mensagem,
+      toastr.status
     );
   }
 
-  private exibeModalConfirmacaoDesativarNovo(nroIntNovo: number): void {
-    const modalConfirmacaoDesativar = this.modalService.open(ModalConfirmacaoComponent, {
-      ...this.OPTIONS_MODAL,
-      size: 'sm'
+  public clearToastr(...toastrToClear: any[]): void {
+    this.toastrs = this.toastrs.filter((toastr: any) => {
+      return !toastrToClear.includes(toastr);
     });
-
-    modalConfirmacaoDesativar.componentInstance.cancelText = 'NÃO';
-    modalConfirmacaoDesativar.componentInstance.confirmText = 'SIM';
-    modalConfirmacaoDesativar.componentInstance.title = 'Desativar Novo'
-    modalConfirmacaoDesativar.componentInstance.message = 'Deseja desativar essa Novo?';
-    modalConfirmacaoDesativar.componentInstance.hasCancel = true;
-
-    modalConfirmacaoDesativar.result
-      .then(async () => {
-        await this.requestDesativarNovo(nroIntNovo);
-        await this.requestListaNovo();
-      })
-      .catch(() => {});
-  }
-
-  private exibeModalConfirmacaoReativarNovo(nroIntNovo: number): void {
-    const modalConfirmacaoReativar = this.modalService.open(ModalConfirmacaoComponent, {
-      ...this.OPTIONS_MODAL,
-      size: 'sm'
-    });
-
-    modalConfirmacaoReativar.componentInstance.cancelText = 'NÃO';
-    modalConfirmacaoReativar.componentInstance.confirmText = 'SIM';
-    modalConfirmacaoReativar.componentInstance.title = 'Reativar Novo';
-    modalConfirmacaoReativar.componentInstance.message = 'Deseja a ativação da Novo?';
-    modalConfirmacaoReativar.componentInstance.hasCancel = true;
-
-    modalConfirmacaoReativar.result
-      .then(async () => {
-        await this.requestReativarNovo(nroIntNovo);
-        await this.requestListaNovo();
-      })
-      .catch(() => {});
-  }
-
-  public redirectEvent($event: any): void {
-    this.requestImprimirNovo();
   }
 
   private exibeToastr(mensagem: string, status: TipoMensagemEnum): void {
@@ -415,73 +67,51 @@ export class ListaNovoComponent implements OnInit, OnDestroy {
     return;
   }
 
-  private setPaginationBuffer(): void {
-    localStorage.setItem('paginationBuffer', JSON.stringify({ 'novo': this.pageInfos }));
+  private requestListanovo(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.novoSubscription?.unsubscribe();
+      this.Novo.listaTodos();
+
+      this.novoSubscription = this.novoStore
+        .state$
+        .subscribe((data: novoState) => {
+          if(data.Novo.hasErrors) {
+            const rawMessage: string = data.Novo.errorMessage;
+
+            this.exibeToastr(
+              ErrorHandlerUtil.getMessage(rawMessage),
+              ErrorHandlerUtil.getStatus(rawMessage)
+            );
+
+            this.novoSubscription?.unsubscribe();
+            reject();
+            return;
+          }
+          if(!data.Novo.isLoading) {
+            this.novoDTO = data.Novo.data;
+
+            this.novoSubscription?.unsubscribe();
+
+            resolve();
+          }
+        });
+    });
   }
 
-  private getPaginationBuffer(): void {
-    const paginationBuffer: any = JSON.parse(localStorage.getItem('paginationBuffer'));
-
-    if (!paginationBuffer?.['novo']) {
-      return;
-    }
-
-    this.pageInfos = {
-      ...this.pageInfos,
-      ...paginationBuffer['novo']
-    };
-
-    return;
-  }
-
-  private setFilterBuffer(): void {
-    localStorage.setItem('filterBuffer', JSON.stringify({ 'novo': this.filtros }));
-  }
-
-  private getFilterBuffer(): void {
-    const filterBuffer: any = JSON.parse(localStorage.getItem('filterBuffer'));
-
-    if (!filterBuffer?.['novo']) {
-      return;
-    }
-
-    this.filtros = {
-      ...this.filtros,
-      ...filterBuffer['novo']
-    };
-
-    return;
-  }
-
-  public stopSubscriptions(): void {
-    this.regiaoExameSubscription?.unsubscribe();
-    this.novoSubscription?.unsubscribe();
-  }
-
-  public refreshList(): void {
-    if (!this.filtros) {
-      return;
-    }
-
-    this.requestListaNovo();
-  }
-
-  public clearToastr(): void {
-    this.toastrs = [];
-  }
-
-  get permissaoConsulta(): boolean {
-    return this.permissaoService.validarPermissao('ROTA', 'LISTA', 'PRV');
-  }
-
-  get permissaoInclusao(): boolean {
-    return this.permissaoService.validarPermissao('ROTA', 'INCLUI', 'PRV');
+  get isnovoLoading(): boolean {
+    return (
+      this.novoStore.state.Novo.isLoading
+      && !this.novoSubscription?.closed
+    );
   }
 
   get isLoading(): boolean {
     return (
-      this.novoStore.state.novo.isLoading
-      || this.regiaoExameStore.state.regiaoExame.isLoading
+      this.isnovoLoading
     );
+  }
+
+  get permissaoConsulta(): boolean {
+    return this.permissaoService.validarPermissao("MOTCONCS", "EXECUTAR", "PRV");
   }
 }

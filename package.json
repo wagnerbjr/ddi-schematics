@@ -1,6 +1,6 @@
 {
   "name": "ddi-schematics",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Automate new files creation with specifics ddi templates",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@angular-devkit/core": "^15.2.10",
     "@angular-devkit/schematics": "^15.2.10",
+    "@angular/cli": "^15.2.10",
     "@schematics/angular": "^15.2.10",
     "typescript": "~5.2.2"
   },

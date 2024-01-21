@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { NovoActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
-import { NovoLista } from '@core/<%= dasherize(name) %>/types/banca-lista.dto';
+/*import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { <%= classify(name) %>ActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
+import { <%= classify(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>-lista.dto';
 import { PrvUtil } from '@core/utils/prv.util';
 import { Action } from '@ddi-ng/layout';
 import { ColumnType, TableColumn } from '@ddi-ng/layout/lib/table/_types';
@@ -11,9 +11,9 @@ import { PermissaoService } from '@ddi-ng/permissao';
   templateUrl: './card-lista-<%= dasherize(name) %>.component.html',
   styleUrls: ['./card-lista-<%= dasherize(name) %>.component.scss']
 })
-export class CardLista<%= dasherize(name) %>Component implements OnInit, OnChanges {
+export class CardLista<%= classify(name) %>Component implements OnInit, OnChanges {
 
-  @Input() listaNovo: <%= dasherize(name) %>Lista[] = [];
+  @Input() lista<%= classify(name) %>: <%= dasherize(name) %>Lista[] = [];
   @Input() pageInfos: any = null;
 
   @Output() pageInfosChange: EventEmitter<{
@@ -53,43 +53,43 @@ export class CardLista<%= dasherize(name) %>Component implements OnInit, OnChang
     this.rowCLickEvent.emit($event.nroIntRota);
   }
 
-  public exibePageConsultarNovo(row: <%= dasherize(name) %>Lista) {
+  public exibePageConsultar<%= classify(name) %>(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
-      banca: row,
-      menuOption: <%= dasherize(name) %>ActionTypes.CONSULTAR
+      <%= dasherize(name) %>: row,
+      menuOption: <%= classify(name) %>ActionTypes.CONSULTAR
     });
   }
 
-  public emiteDesativarNovoEvent(row: <%= dasherize(name) %>Lista) {
+  public emiteDesativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
-      menuOption: <%= dasherize(name) %>ActionTypes.EXCLUIR
+      menuOption: <%= classify(name) %>ActionTypes.EXCLUIR
     });
   }
 
-  public emiteReativarNovoEvent(row: <%= dasherize(name) %>Lista) {
+  public emiteReativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
-      menuOption: <%= dasherize(name) %>ActionTypes.ALTERAR
+      menuOption: <%= classify(name) %>ActionTypes.ALTERAR
     });
   }
 
   private montaColunas(): TableColumn[] {
     const actionOptions: Action[] = [
       {
-        id: 'consultar-<%= dasherize(name) %>',
+        id: 'consultar-<%= classify(name) %>',
         show: true,
         label: 'Detalhes',
         pathForList: ''
       },
       {
-        id: 'desativar-<%= dasherize(name) %>',
+        id: 'desativar-<%= classify(name) %>',
         show: this.permissaoDesativar,
         label: 'Desativar',
         pathForList: 'isPodeDesativar'
       },
       {
-        id: 'reativar-<%= dasherize(name) %>',
+        id: 'reativar-<%= classify(name) %>',
         show: this.permissaoDesativar,
         label: 'Reativar',
         pathForList: 'isPodeReativar'
@@ -108,7 +108,7 @@ export class CardLista<%= dasherize(name) %>Component implements OnInit, OnChang
         }
       },
       {
-        title: '<%= dasherize(name) %>',
+        title: '<%= classify(name) %>',
         dataPath: 'nome',
         transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
       },
@@ -140,7 +140,7 @@ export class CardLista<%= dasherize(name) %>Component implements OnInit, OnChang
   }
 
   public imprimirEvent() {
-    this.redirectEvent.emit(NovoActionTypes.IMPRIMIR);
+    this.redirectEvent.emit(<%= classify(name) %>ActionTypes.IMPRIMIR);
   }
 
   public handlePageChange($event): void {
@@ -154,10 +154,11 @@ export class CardLista<%= dasherize(name) %>Component implements OnInit, OnChang
   }
 
   get totalRegistros(): number {
-    return this.lista<%= dasherize(name) %>[0]?.totalRegistros;
+    return this.lista<%= classify(name) %>[0]?.totalRegistros;
   }
 
   get permissaoDesativar(): boolean {
     return this.permissaoService.validarPermissao("ROTA", "ALTERA", "PRV");
   }
 }
+*/

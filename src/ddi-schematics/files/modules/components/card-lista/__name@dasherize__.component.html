@@ -1,6 +1,6 @@
 <div
-  *ngIf="!!listaNovo.length"
-  class="card-lista-novo-container"
+  *ngIf="!!lista<%= camelize(name) %>.length"
+  class="card-lista-<%= dasherize(name) %>-container"
 >
     <div class="table-container">
       <div class="button-print-wrapper">
@@ -12,7 +12,7 @@
       <ddi-table
         [rowClickable]="true"
         [columns]="colunas"
-        [data]="listaNovo"
+        [data]="lista<%= dasherize(name) %>"
         [pageSize]="pageInfos.pageSize"
         [currentPage]="pageInfos.pageNum"
         [collectionSize]="totalRegistros"

@@ -6,6 +6,14 @@
       "description": "A new project with schematic.",
       "factory": "./ddi-schematics/index#ddiSchematics",
       "schema": "./ddi-schematics/schema.json"
+    },
+    "component": {
+      "aliases": [
+        "c"
+      ],
+      "description": "A schematic for generating component, with optional rxjs Subscription management",
+      "factory": "./ddi-schematics/index#subscriptionComponent",
+      "schema": "./ddi-schematics/new_component_schema/schema.json"
     }
   }
 }

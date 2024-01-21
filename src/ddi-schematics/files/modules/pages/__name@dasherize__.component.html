@@ -1,4 +1,4 @@
-<div class="lista-novo-container">
+<div class="lista-<%= dasherize(name) %>-container">
   <div *ngIf="permissaoConsulta; else noPermission">
     <div class="navigation-container">
       <div class="navigation-wrapper">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="header-container">
-      <h2 class="header-page">PESQUISAR BANCAS</h2>
+      <h2 class="header-page">PESQUISAR <%= classify(name) %></h2>
       <div class="card-buttons-container">
         <div class="button-wrapper">
           <button
@@ -31,22 +31,22 @@
       </div>
     </div>
 
-    <div class="lista-novo-wrapper">
-      <app-card-filtra-novo
+    <div class="lista-<%= dasherize(name) %>-wrapper">
+      <app-card-filtra-<%= dasherize(name) %>
         [filtrosOnBuffer]="filtros"
         (clearErrorsEvent)="handleClearErrors()"
         (toastrs)="handleToastr($event)"
         (filtros)="handleFiltros($event)"
         (clearListEvent)="clearToastr()"
-      ></app-card-filtra-novo>
-      <app-card-lista-novo
-        [listaNovo]="listaNovo"
+      ></app-card-filtra-<%= dasherize(name) %>>
+      <app-card-lista-<%= dasherize(name) %>
+        [listaNovo]="lista<%= dasherize(name) %>"
         [(pageInfos)]="pageInfos"
         (pageInfosChange)="handlePagination($event)"
         (rowCLickEvent)="handleRowCLick($event)"
         (menuClickEvent)="menuClickHandler($event)"
         (redirectEvent)="redirectEvent($event)"
-      ></app-card-lista-novo>
+      ></app-card-lista-<%= dasherize(name) %>>
     </div>
   </div>
   <ng-template #noPermission>
