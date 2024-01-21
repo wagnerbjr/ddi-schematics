@@ -13,8 +13,6 @@ import {
 	url
 } from '@angular-devkit/schematics';
 
-//import { templateInclude } from '../lib/include';
-
 interface SchemaOptions {
   name: string;
 }
@@ -25,8 +23,6 @@ export function ddiSchematics(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     //console.log("Hello world from schematics");
     const rule = chain([
-      //runNgNewSchematic(_options),
-      //createDefaultFolders(_options),
       createCoreNovoServiceFolder(_options),
       createCoreNovoStoreFolder(_options),
       createCoreNovoTypesFolder(_options),
@@ -40,27 +36,6 @@ export function ddiSchematics(_options: any): Rule {
     return rule(tree, _context);
   };
 }
-
-/*function runNgNewSchematic({ name }: SchemaOptions) {
-  return externalSchematic("@schematics/angular", "ng-new", {
-    name,
-    version: "15.1.5",
-    directory: name,
-    routing: false,
-    style: "scss",
-    inlineStyle: false,
-    inlineTemplate: false,
-  });
-
-}*/
-
-/*function createDefaultFolders({ name }: SchemaOptions) {
-  return (tree: Tree, _context: SchematicContext) => {
-    //core-folders
-    tree.create(`${name}/src/app/core/${name}/service/`, "");
-    
-  };
-}*/
 
 function createCoreNovoServiceFolder({ name }: SchemaOptions) {
   return (_: Tree, _context: SchematicContext) => {
@@ -150,13 +125,13 @@ export function subscriptionComponent(_options: any): Rule {
       _options.path = normalize('/' + dirname((_options.path + '/' + _options.name) as Path));
 
       const templateSourceModulePage = apply(
-          url('./files/modules/pages'), [
+          url('./files/modules/pages/lista'), [
             renameTemplateFiles(),
               template({
                   ...strings,
                   ..._options,
               }),
-              move(_options.path+'/modules/'+_options.name+'/pages' as string),
+              move(_options.path+'/modules/'+_options.name+'/pages/lista-'+_options.name+'/' as string),
           ]);
       
       const templateSourceModuleComponentLista = apply(

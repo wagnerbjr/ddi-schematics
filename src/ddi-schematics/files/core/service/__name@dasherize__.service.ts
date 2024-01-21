@@ -1,6 +1,6 @@
 /*import { Injectable } from "@angular/core";
 import { DefaultHeaders, DetranHttpService, GET } from "@ddi-ng/http";
-import { Novo } from "../types/<%= dasherize(name) %>.dto";
+import { <%= classify(name) %>Lista } from "../types/<%= dasherize(name) %>.dto";
 
 @Injectable()
 @DefaultHeaders({
@@ -9,7 +9,7 @@ import { Novo } from "../types/<%= dasherize(name) %>.dto";
 export class <%= classify(name) %>Service extends DetranHttpService {
   @GET('/dominio/lista-<%= dasherize(name) %>')
   lista<%= classify(name) %>(
-  ): Promise<<%= classify(name) %>[]> {
+  ): Promise<<%= classify(name) %>Lista[]> {
     return null;
   }
 }*/

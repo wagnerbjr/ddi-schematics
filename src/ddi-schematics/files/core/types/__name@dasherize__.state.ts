@@ -1,9 +1,10 @@
-/*import { <%= classify(name) %> } from "./<%= dasherize(name) %>.dto"import
+/*import { <%= classify(name) %>Lista } from "./<%= dasherize(name) %>.dto"
 
 export interface <%= classify(name) %>State {
   <%= classify(name) %>: {
-    data: <%= classify(name) %> | <%= classify(name) %>[] | undefined,
+    data: <%= classify(name) %>Lista | <%= classify(name) %>Lista[] | undefined,
     isLoading: boolean,
     hasErrors: boolean,
     errorMessage: string
-  }*/
+  }
+}*/

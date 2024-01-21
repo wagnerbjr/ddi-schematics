@@ -1,5 +1,5 @@
 <div
-  *ngIf="!!lista<%= camelize(name) %>.length"
+  *ngIf="!!lista<%= classify(name) %>.length"
   class="card-lista-<%= dasherize(name) %>-container"
 >
     <div class="table-container">
@@ -12,7 +12,7 @@
       <ddi-table
         [rowClickable]="true"
         [columns]="colunas"
-        [data]="lista<%= dasherize(name) %>"
+        [data]="lista<%= classify(name) %>"
         [pageSize]="pageInfos.pageSize"
         [currentPage]="pageInfos.pageNum"
         [collectionSize]="totalRegistros"
