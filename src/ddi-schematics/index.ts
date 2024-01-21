@@ -207,7 +207,31 @@ export function subscriptionComponent(_options: any): Rule {
                   ..._options,
               }),
               move(_options.path+'/core/'+_options.name+'/types' as string),
+          ]);
+
+        const templateSourceCoreComponent = apply(
+          url('./files/core'), [
+            renameTemplateFiles(),
+              template({
+                  ...strings,
+                  ..._options,
+              }),
+              move(_options.path+'/core/'+_options.name as string),
+          ]);
+        
+        const templateSourceModuleComponent = apply(
+          url('./files/modules'), [
+            renameTemplateFiles(),
+              template({
+                  ...strings,
+                  ..._options,
+              }),
+              move(_options.path+'/modules/'+_options.name as string),
           ]);  
+
+      if (_options.createModal) {
+        console.log('criar modal');
+      }    
 
       return chain([
           mergeWith(templateSourceCoreComponentService, MergeStrategy.Overwrite),
@@ -215,7 +239,9 @@ export function subscriptionComponent(_options: any): Rule {
           mergeWith(templateSourceCoreComponentTypes, MergeStrategy.Overwrite),
           mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
           mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
-          mergeWith(templateSourceModulePage, MergeStrategy.Overwrite)
+          mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
+          mergeWith(templateSourceCoreComponent, MergeStrategy.Overwrite),
+          mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite)
       ]);
   };
 }

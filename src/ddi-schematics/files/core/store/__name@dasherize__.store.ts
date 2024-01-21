@@ -1,14 +1,14 @@
 /*import { Injectable } from "@angular/core";
 import { AbstractStore } from "@ddi-ng/store";
-import { <%= capitalize(name) %>State } from "../types/<%= capitalize(name) %>.state";
-import { <%= capitalize(name) %>ActionTypes } from "./<%= capitalize(name) %>.actions.types";
+import { <%= classify(name) %>State } from "../types/<%= classify(name) %>.state";
+import { <%= classify(name) %>ActionTypes } from "./<%= classify(name) %>.actions.types";
 
 @Injectable({
   providedIn: 'root'
 })
-export class <%= capitalize(name) %>Store extends AbstractStore<<%= capitalize(name) %>State> {
-static defaultState: <%= capitalize(name) %>State = {
-  <%= capitalize(name) %>: {
+export class <%= classify(name) %>Store extends AbstractStore<<%= classify(name) %>State> {
+static defaultState: <%= classify(name) %>State = {
+  <%= classify(name) %>: {
     data: undefined,
     isLoading: false,
     hasErrors: false,
@@ -17,15 +17,15 @@ static defaultState: <%= capitalize(name) %>State = {
 };
 
 constructor() {
-  super(<%= capitalize(name) %>Store.defaultState, {
-    persist: { session: true, name: '<%= capitalize(name) %>Store' }
+  super(<%= classify(name) %>Store.defaultState, {
+    persist: { session: true, name: '<%= classify(name) %>Store' }
   });
 }
 
 reducer({ state, type, payload }) {
   const stores: any = {
     pending: {
-      <%= capitalize(name) %>: {
+      <%= classify(name) %>: {
         data: undefined,
         isLoading: true,
         hasErrors: false,
@@ -33,7 +33,7 @@ reducer({ state, type, payload }) {
       }
     },
     fulfilled: {
-      <%= capitalize(name) %>: {
+      <%= classify(name) %>: {
         data: payload,
         isLoading: false,
         hasErrors: false,
@@ -41,7 +41,7 @@ reducer({ state, type, payload }) {
       }
     },
     rejected: {
-      <%= capitalize(name) %>: {
+      <%= classify(name) %>: {
         data: undefined,
         isLoading: false,
         hasErrors: true,
@@ -50,21 +50,21 @@ reducer({ state, type, payload }) {
     }
   }
   const options: any = {
-    [`${<%= capitalize(name) %>ActionTypes.LISTAR}_PENDING`]: () => ({ ...stores.pending }),
-    [`${<%= capitalize(name) %>ActionTypes.LISTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= capitalize(name) %>ActionTypes.LISTAR}_REJECTED`]: () => ({ ...stores.rejected }),
-    [`${<%= capitalize(name) %>ActionTypes.CONSULTAR}_PENDING`]: () => ({ ...stores.pending }),
-    [`${<%= capitalize(name) %>ActionTypes.CONSULTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= capitalize(name) %>ActionTypes.CONSULTAR}_REJECTED`]: () => ({ ...stores.rejected }),
-    [`${<%= capitalize(name) %>ActionTypes.INCLUIR}_PENDING`]: () => ({ ...stores.pending }),
-    [`${<%= capitalize(name) %>ActionTypes.INCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= capitalize(name) %>ActionTypes.INCLUIR}_REJECTED`]: () => ({ ...stores.rejected }),
-    [`${<%= capitalize(name) %>ActionTypes.ALTERAR}_PENDING`]: () => ({ ...stores.pending }),
-    [`${<%= capitalize(name) %>ActionTypes.ALTERAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= capitalize(name) %>ActionTypes.ALTERAR}_REJECTED`]: () => ({ ...stores.rejected }),
-    [`${<%= capitalize(name) %>ActionTypes.EXCLUIR}_PENDING`]: () => ({ ...stores.pending }),
-    [`${<%= capitalize(name) %>ActionTypes.EXCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= capitalize(name) %>ActionTypes.EXCLUIR}_REJECTED`]: () => ({ ...stores.rejected })
+    [`${<%= classify(name) %>ActionTypes.LISTAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.LISTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.LISTAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.CONSULTAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.CONSULTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.CONSULTAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.INCLUIR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.INCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.INCLUIR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.ALTERAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.ALTERAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.ALTERAR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.EXCLUIR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.EXCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.EXCLUIR}_REJECTED`]: () => ({ ...stores.rejected })
   }
 
   return !!options[type]

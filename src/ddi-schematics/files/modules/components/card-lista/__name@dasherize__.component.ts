@@ -1,6 +1,6 @@
 /*import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { <%= capitalize(name) %>ActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
-import { <%= capitalize(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>-lista.dto';
+import { <%= classify(name) %>ActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
+import { <%= classify(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>-lista.dto';
 import { PrvUtil } from '@core/utils/prv.util';
 import { Action } from '@ddi-ng/layout';
 import { ColumnType, TableColumn } from '@ddi-ng/layout/lib/table/_types';
@@ -11,9 +11,9 @@ import { PermissaoService } from '@ddi-ng/permissao';
   templateUrl: './card-lista-<%= dasherize(name) %>.component.html',
   styleUrls: ['./card-lista-<%= dasherize(name) %>.component.scss']
 })
-export class CardLista<%= capitalize(name) %>Component implements OnInit, OnChanges {
+export class CardLista<%= classify(name) %>Component implements OnInit, OnChanges {
 
-  @Input() lista<%= capitalize(name) %>: <%= dasherize(name) %>Lista[] = [];
+  @Input() lista<%= classify(name) %>: <%= dasherize(name) %>Lista[] = [];
   @Input() pageInfos: any = null;
 
   @Output() pageInfosChange: EventEmitter<{
@@ -53,43 +53,43 @@ export class CardLista<%= capitalize(name) %>Component implements OnInit, OnChan
     this.rowCLickEvent.emit($event.nroIntRota);
   }
 
-  public exibePageConsultar<%= capitalize(name) %>(row: <%= dasherize(name) %>Lista) {
+  public exibePageConsultar<%= classify(name) %>(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
       <%= dasherize(name) %>: row,
-      menuOption: <%= capitalize(name) %>ActionTypes.CONSULTAR
+      menuOption: <%= classify(name) %>ActionTypes.CONSULTAR
     });
   }
 
-  public emiteDesativar<%= capitalize(name) %>Event(row: <%= dasherize(name) %>Lista) {
+  public emiteDesativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
-      menuOption: <%= capitalize(name) %>ActionTypes.EXCLUIR
+      menuOption: <%= classify(name) %>ActionTypes.EXCLUIR
     });
   }
 
-  public emiteReativar<%= capitalize(name) %>Event(row: <%= dasherize(name) %>Lista) {
+  public emiteReativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
-      menuOption: <%= capitalize(name) %>ActionTypes.ALTERAR
+      menuOption: <%= classify(name) %>ActionTypes.ALTERAR
     });
   }
 
   private montaColunas(): TableColumn[] {
     const actionOptions: Action[] = [
       {
-        id: 'consultar-<%= capitalize(name) %>',
+        id: 'consultar-<%= classify(name) %>',
         show: true,
         label: 'Detalhes',
         pathForList: ''
       },
       {
-        id: 'desativar-<%= capitalize(name) %>',
+        id: 'desativar-<%= classify(name) %>',
         show: this.permissaoDesativar,
         label: 'Desativar',
         pathForList: 'isPodeDesativar'
       },
       {
-        id: 'reativar-<%= capitalize(name) %>',
+        id: 'reativar-<%= classify(name) %>',
         show: this.permissaoDesativar,
         label: 'Reativar',
         pathForList: 'isPodeReativar'
@@ -108,7 +108,7 @@ export class CardLista<%= capitalize(name) %>Component implements OnInit, OnChan
         }
       },
       {
-        title: '<%= capitalize(name) %>',
+        title: '<%= classify(name) %>',
         dataPath: 'nome',
         transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
       },
@@ -140,7 +140,7 @@ export class CardLista<%= capitalize(name) %>Component implements OnInit, OnChan
   }
 
   public imprimirEvent() {
-    this.redirectEvent.emit(<%= capitalize(name) %>ActionTypes.IMPRIMIR);
+    this.redirectEvent.emit(<%= classify(name) %>ActionTypes.IMPRIMIR);
   }
 
   public handlePageChange($event): void {
@@ -154,7 +154,7 @@ export class CardLista<%= capitalize(name) %>Component implements OnInit, OnChan
   }
 
   get totalRegistros(): number {
-    return this.lista<%= capitalize(name) %>[0]?.totalRegistros;
+    return this.lista<%= classify(name) %>[0]?.totalRegistros;
   }
 
   get permissaoDesativar(): boolean {

@@ -6,10 +6,10 @@ import { Novo } from "../types/<%= dasherize(name) %>.dto";
 @DefaultHeaders({
   'Content-Type': 'application/json'
 })
-export class <%= capitalize(name) %>Service extends DetranHttpService {
+export class <%= classify(name) %>Service extends DetranHttpService {
   @GET('/dominio/lista-<%= dasherize(name) %>')
-  lista<%= capitalize(name) %>(
-  ): Promise<<%= capitalize(name) %>[]> {
+  lista<%= classify(name) %>(
+  ): Promise<<%= classify(name) %>[]> {
     return null;
   }
 }*/

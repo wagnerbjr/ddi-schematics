@@ -7,7 +7,7 @@ import { TipoMensagemEnum } from 'app/shared/enums/tipe-mensagem.enum';
   templateUrl: './card-filtra-<%= dasherize(name) %>.component.html',
   styleUrls: ['./card-filtra-<%= dasherize(name) %>.component.scss']
 })
-export class CardFiltra<%= capitalize(name) %>Component implements OnInit, OnChanges {
+export class CardFiltra<%= classify(name) %>Component implements OnInit, OnChanges {
 
   @Input() listaRegiaoExame: RegiaoExame[] = [];
   @Input() filtrosOnBuffer: any = null;

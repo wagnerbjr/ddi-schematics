@@ -19,6 +19,13 @@
         "index": 0
       },
       "x-prompt": "What name would you like to use for the component?"
+    },
+    "createModal": {
+			"type": "boolean",
+			"default": false,
+			"description": "Specifies if declaring module exports the component.",
+      "x-prompt": "Do you want generate modal components?:",
+			"alias": "cm"
     }
   },
   "required": [

@@ -1,16 +1,16 @@
-/*import { Injectable } from "@angcapitalizeular/core";
+/*import { Injectable } from "@angclassifyular/core";
 import { AbstractEffect } from "@ddi-ng/store";
-import { <%= capitalize(name) %>ActionTypes } from "./<%= capitalize(name) %>.actions.types";
+import { <%= classify(name) %>ActionTypes } from "./<%= classify(name) %>.actions.types";
 
 @Injectable({
   providedIn: 'root'
 })
-export class <%= capitalize(name) %>Effects extends AbstractEffect {
+export class <%= classify(name) %>Effects extends AbstractEffect {
 constructor() {
   super();
 
   this.registerAfterEffects({
-    type: `${<%= capitalize(name) %>ActionTypes.LISTAR}_FULFILLED`,
+    type: `${<%= classify(name) %>ActionTypes.LISTAR}_FULFILLED`,
     effect: () => {}
   });
 }

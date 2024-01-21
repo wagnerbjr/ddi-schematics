@@ -1,8 +1,8 @@
-/*import { <%= capitalize(name) %> } from "./<%= dasherize(name) %>.dto"import
+/*import { <%= classify(name) %> } from "./<%= dasherize(name) %>.dto"import
 
-export interface <%= capitalize(name) %>State {
-  <%= capitalize(name) %>: {
-    data: <%= capitalize(name) %> | <%= capitalize(name) %>[] | undefined,
+export interface <%= classify(name) %>State {
+  <%= classify(name) %>: {
+    data: <%= classify(name) %> | <%= classify(name) %>[] | undefined,
     isLoading: boolean,
     hasErrors: boolean,
     errorMessage: string
