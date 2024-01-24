@@ -1,15 +1,26 @@
 /*import { Injectable } from "@angular/core";
 import { DefaultHeaders, DetranHttpService, GET } from "@ddi-ng/http";
-import { Novo } from "../types/<%= dasherize(name) %>.dto";
+import { <%= classify(name) %>Lista } from "../types/<%= dasherize(name) %>.dto";
 
 @Injectable()
 @DefaultHeaders({
   'Content-Type': 'application/json'
 })
 export class <%= classify(name) %>Service extends DetranHttpService {
-  @GET('/dominio/lista-<%= dasherize(name) %>')
+  @GET('/<%= dasherize(name) %>/lista-<%= dasherize(name) %>')
   lista<%= classify(name) %>(
-  ): Promise<<%= classify(name) %>[]> {
+  ): Promise<<%= classify(name) %>Lista[]> {
     return null;
   }
+
+  @GET('/<%= dasherize(name) %>/lista-pesquisar-<%= dasherize(name) %>')
+  listaPesquisar<%= classify(name) %>(
+    @QUERY('pageNum') pageNum: number,
+    @QUERY('pageSize') pageSize: number,
+    @QUERY('nome') nome: string,
+    @QUERY('situacao') situacao: string
+  ): Promise<<%= classify(name) %>Lista[]> {
+    return null;
+  }
+
 }*/

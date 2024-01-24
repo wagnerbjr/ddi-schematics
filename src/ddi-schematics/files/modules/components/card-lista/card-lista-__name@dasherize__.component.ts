@@ -1,6 +1,6 @@
 /*import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { <%= classify(name) %>ActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
-import { <%= classify(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>-lista.dto';
+import { <%= classify(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>.dto';
 import { PrvUtil } from '@core/utils/prv.util';
 import { Action } from '@ddi-ng/layout';
 import { ColumnType, TableColumn } from '@ddi-ng/layout/lib/table/_types';
@@ -13,7 +13,7 @@ import { PermissaoService } from '@ddi-ng/permissao';
 })
 export class CardLista<%= classify(name) %>Component implements OnInit, OnChanges {
 
-  @Input() lista<%= classify(name) %>: <%= dasherize(name) %>Lista[] = [];
+  @Input() lista<%= classify(name) %>: <%= classify(name) %>Lista[] = [];
   @Input() pageInfos: any = null;
 
   @Output() pageInfosChange: EventEmitter<{
@@ -22,7 +22,7 @@ export class CardLista<%= classify(name) %>Component implements OnInit, OnChange
   }> = new EventEmitter();
   @Output() rowCLickEvent: EventEmitter<any> = new EventEmitter();
   @Output() menuClickEvent: EventEmitter<any> = new EventEmitter();
-  @Output() redirectEvent: EventEmitter<<%= dasherize(name) %>ActionTypes> = new EventEmitter();
+  @Output() redirectEvent: EventEmitter<<%= classify(name) %>ActionTypes> = new EventEmitter();
 
   public colunas: any[] = [];
 
@@ -40,9 +40,9 @@ export class CardLista<%= classify(name) %>Component implements OnInit, OnChange
 
   public handleMenuClick($event): void {
     const actionOptions: Map<string, Function> = new Map([
-      ['consultar-<%= dasherize(name) %>', (): void =>  this.exibePageConsultar<%= dasherize(name) %>($event.row)],
-      ['desativar-<%= dasherize(name) %>', (): void => this.emiteDesativar<%= dasherize(name) %>Event($event.row)],
-      ['reativar-<%= dasherize(name) %>', (): void => this.emiteReativar<%= dasherize(name) %>Event($event.row)]
+      ['consultar-<%= dasherize(name) %>', (): void =>  this.exibePageConsultar<%= classify(name) %>($event.row)],
+      ['desativar-<%= dasherize(name) %>', (): void => this.emiteDesativar<%= classify(name) %>Event($event.row)],
+      ['reativar-<%= dasherize(name) %>', (): void => this.emiteReativar<%= classify(name) %>Event($event.row)]
     ]);
 
     actionOptions.get($event.action.id)?.bind(this)($event.row);
@@ -53,21 +53,21 @@ export class CardLista<%= classify(name) %>Component implements OnInit, OnChange
     this.rowCLickEvent.emit($event.nroIntRota);
   }
 
-  public exibePageConsultar<%= classify(name) %>(row: <%= dasherize(name) %>Lista) {
+  public exibePageConsultar<%= classify(name) %>(row: <%= classify(name) %>Lista) {
     this.menuClickEvent.emit({
       <%= dasherize(name) %>: row,
       menuOption: <%= classify(name) %>ActionTypes.CONSULTAR
     });
   }
 
-  public emiteDesativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
+  public emiteDesativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
       menuOption: <%= classify(name) %>ActionTypes.EXCLUIR
     });
   }
 
-  public emiteReativar<%= classify(name) %>Event(row: <%= dasherize(name) %>Lista) {
+  public emiteReativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
     this.menuClickEvent.emit({
       nroIntRota: row.nroIntRota,
       menuOption: <%= classify(name) %>ActionTypes.ALTERAR
