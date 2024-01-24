@@ -9,7 +9,6 @@ import { TipoMensagemEnum } from 'app/shared/enums/tipe-mensagem.enum';
 })
 export class CardFiltra<%= classify(name) %>Component implements OnInit, OnChanges {
 
-  @Input() listaRegiaoExame: RegiaoExame[] = [];
   @Input() filtrosOnBuffer: any = null;
 
   @Output() clearErrorsEvent: EventEmitter<any> = new EventEmitter();

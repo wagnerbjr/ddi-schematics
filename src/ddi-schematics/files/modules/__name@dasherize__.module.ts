@@ -8,13 +8,14 @@ import { DetranLayoutModule, DetranLoaderModule } from '@ddi-ng/layout';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { FieldsModule } from 'app/shared/components/fields/fields.module';
-import { CardLista<%= classify(name) %>Component } from './components/card-lista-<%= dasherize(name) %>/card-lista-<%= dasherize(name) %>.component';
+import { CardLista<%= classify(name) %>Component } from './components/card-lista/card-lista-<%= dasherize(name) %>.component';
+import { CardFiltra<%= classify(name) %>Component } from './components/card-filtra/card-filtra-<%= dasherize(name) %>.component';
 
 @NgModule({
   declarations: [
     Lista<%= classify(name) %>Component,
     CardLista<%= classify(name) %>Component,
-    ModalConsulta<%= classify(name) %>Component
+    //ModalConsulta<%= classify(name) %>Component
   ],
   imports: [
     CommonModule,

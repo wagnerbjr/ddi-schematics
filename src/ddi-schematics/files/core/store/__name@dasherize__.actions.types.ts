@@ -5,5 +5,6 @@
   EXCLUIR = "<%= dasherize(name) %>/EXCLUIR",
   LISTAR = "<%= dasherize(name) %>/LISTAR",
   LIMPAR = "<%= dasherize(name) %>/LIMPAR",
-  RELATORIO = "<%= dasherize(name) %>/RELATORIO"
+  RELATORIO = "<%= dasherize(name) %>/RELATORIO",
+  IMPRIMIR = "<%= dasherize(name) %>/IMPRIMIR"
 }*/

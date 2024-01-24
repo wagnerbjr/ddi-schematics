@@ -1,7 +1,7 @@
 /*import { Injectable } from "@angular/core";
 import { AbstractStore } from "@ddi-ng/store";
-import { <%= classify(name) %>State } from "../types/<%= classify(name) %>.state";
-import { <%= classify(name) %>ActionTypes } from "./<%= classify(name) %>.actions.types";
+import { <%= classify(name) %>State } from "../types/<%= dasherize(name) %>.state";
+import { <%= classify(name) %>ActionTypes } from "./<%= dasherize(name) %>.actions.types";
 
 @Injectable({
   providedIn: 'root'
