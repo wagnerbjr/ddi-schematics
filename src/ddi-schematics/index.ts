@@ -202,13 +202,95 @@ export function subscriptionComponent(_options: any): Rule {
                   ..._options,
               }),
               move(_options.path+'/modules/'+_options.name as string),
-          ]);  
+          ]);
+          
+        const templateSourceModalCrudComponent = apply(
+          url('./files/modules/components/modal/modal-crud'), [
+            renameTemplateFiles(),
+              template({
+                  ...strings,
+                  ..._options,
+              }),
+              move(_options.path+'/modules/'+_options.name+'/components/modal-crud/' as string), 
+          ]);
 
-      if (_options.createModal) {
-        console.log('criar modal');
-      }    
+          const templateSourceModalDetalhesComponent = apply(
+            url('./files/modules/components/modal/modal-detalhes'), [
+              renameTemplateFiles(),
+                template({
+                    ...strings,
+                    ..._options,
+                }),
+                move(_options.path+'/modules/'+_options.name+'/components/modal-detalhes/' as string), 
+            ]);
+            
+          const templateSourceModalAlterarComponent = apply(
+            url('./files/modules/components/modal/modal-alterar'), [
+              renameTemplateFiles(),
+                template({
+                    ...strings,
+                    ..._options,
+                }),
+                move(_options.path+'/modules/'+_options.name+'/components/modal-alterar/' as string), 
+            ]);
+            
+          const templateSourceModalExcluirComponent = apply(
+            url('./files/modules/components/modal/modal-excluir'), [
+              renameTemplateFiles(),
+                template({
+                    ...strings,
+                    ..._options,
+                }),
+                move(_options.path+'/modules/'+_options.name+'/components/modal-excluir/' as string), 
+            ]);
+            
+          const templateSourceModalIncluirComponent = apply(
+            url('./files/modules/components/modal/modal-incluir'), [
+              renameTemplateFiles(),
+                template({
+                    ...strings,
+                    ..._options,
+                }),
+                move(_options.path+'/modules/'+_options.name+'/components/modal-incluir/' as string), 
+            ]);  
+    
+      let mergedCore = chain([]);
+      let mergedList = chain([]);
+      let mergeModal = chain([]);
 
-      return chain([
+      _options.createComponents.map((componentName: string) => {
+        if (componentName==='Create Core components') {
+          mergedCore = chain([
+            mergeWith(templateSourceCoreComponentService, MergeStrategy.Overwrite),
+            mergeWith(templateSourceCoreComponentStore, MergeStrategy.Overwrite),
+            mergeWith(templateSourceCoreComponentTypes, MergeStrategy.Overwrite),
+            mergeWith(templateSourceCoreComponent, MergeStrategy.Overwrite),
+          ])
+        }
+        
+        if (componentName==='Create List components') {
+          mergedList = chain([
+            mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite)
+          ])
+        }  
+
+        if (componentName==='Create Modal components') {
+          //console.log('criar modal components');
+          mergeModal = chain([
+            mergeWith(templateSourceModalCrudComponent, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModalDetalhesComponent, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModalAlterarComponent, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModalExcluirComponent, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModalIncluirComponent, MergeStrategy.Overwrite)
+          ]);
+        }  
+
+      });
+
+      /*return chain([
           mergeWith(templateSourceCoreComponentService, MergeStrategy.Overwrite),
           mergeWith(templateSourceCoreComponentStore, MergeStrategy.Overwrite),
           mergeWith(templateSourceCoreComponentTypes, MergeStrategy.Overwrite),
@@ -217,7 +299,9 @@ export function subscriptionComponent(_options: any): Rule {
           mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
           mergeWith(templateSourceCoreComponent, MergeStrategy.Overwrite),
           mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite)
-      ]);
+      ]);*/
+
+      return chain([mergedCore, mergedList, mergeModal])
   };
 }
 

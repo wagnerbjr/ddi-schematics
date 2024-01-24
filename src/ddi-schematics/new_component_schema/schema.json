@@ -20,12 +20,21 @@
       },
       "x-prompt": "What name would you like to use for the component?"
     },
-    "createModal": {
-			"type": "boolean",
-			"default": false,
-			"description": "Specifies if declaring module exports the component.",
-      "x-prompt": "Do you want generate modal components?:",
-			"alias": "cm"
+    "createComponents": {
+      "type": "array",
+      "default": false,
+      "description": "Specifies which component will be created.",
+      "x-prompt": {
+        "message": "Select components",
+        "type": "list",
+        "multiselect": true,
+        "items": [
+          "Create Core components",
+          "Create List components", 
+          "Create Modal components"
+        ]
+      },
+      "alias": "cm"
     }
   },
   "required": [

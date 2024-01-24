@@ -1,6 +1,6 @@
 /*import { Injectable } from "@angular/core";
 import { AbstractEffect } from "@ddi-ng/store";
-import { <%= classify(name) %>ActionTypes } from "./<%= classify(name) %>.actions.types";
+import { <%= classify(name) %>ActionTypes } from "./<%= dasherize(name) %>.actions.types";
 
 @Injectable({
   providedIn: 'root'

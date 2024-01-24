@@ -1,0 +1,76 @@
+/*@import '@ddi/bootstrap/scss/detran/variables';
+
+.lista-<%= dasherize(name) %>-container {
+  .navigation-container {
+    display: grid;
+    grid-template-columns: 97.5% 2.5%;
+
+    .navigation-wrapper {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 30px;
+
+      .navigation-item {
+        margin-right: 10px;
+        color: $orange-dark;
+        font-weight: 400;
+        font-size: 15px;
+        cursor: pointer;
+
+        span:first-of-type {
+          margin-right: 10px;
+        }
+      }
+
+      .navigation-item:last-of-type {
+        color: black;
+        text-decoration: underline;
+      }
+
+    }
+    .navigation-item-goback {
+      color: black;
+      font-weight: 400;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  }
+
+  .header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Roboto, "Helvetica Neue";
+    min-width: 680px;
+
+    .header-page {
+      margin-bottom: 35px;
+      font-size: 24px;
+    }
+
+    .card-buttons-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-end;
+      margin-bottom: 20px;
+
+      .button-criar {
+        background-color: $orange-dark;
+      }
+    }
+  }
+
+  .lista-novo-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .lista-novo-container {
+    overflow-x: auto;
+  }
+}*/

@@ -4,7 +4,7 @@
   "title": "customized ng new schematic",
   "type": "object",
   "description": "Initialize a new project",
-  "required": ["name", "createModal"],
+  "required": ["name", "createComponents"],
   "properties": {
     "name": {
       "type": "string",
