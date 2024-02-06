@@ -1,5 +1,5 @@
 /*import { Injectable } from "@angular/core";
-import { DefaultHeaders, DetranHttpService, GET } from "@ddi-ng/http";
+import { DefaultHeaders, DetranHttpService, GET, QUERY } from "@ddi-ng/http";
 import { <%= classify(name) %>Lista } from "../types/<%= dasherize(name) %>.dto";
 
 @Injectable()

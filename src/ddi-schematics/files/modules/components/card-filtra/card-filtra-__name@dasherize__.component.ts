@@ -55,7 +55,7 @@ export class CardFiltra<%= classify(name) %>Component implements OnInit, OnChang
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.regiaoExamesOptions = this.mountRegiaoExameOptions(this.listaRegiaoExame);
+    //this.regiaoExamesOptions = this.mountRegiaoExameOptions(this.listaRegiaoExame);
 
     if (!!this.formFields.regiaoExames) {
       this.formFields.regiaoExames.label = this.regiaoExamesOptions.find(
@@ -64,14 +64,14 @@ export class CardFiltra<%= classify(name) %>Component implements OnInit, OnChang
     }
   }
 
-  private mountRegiaoExameOptions(listaRegiaoExame: RegiaoExame[]): any {
-    return listaRegiaoExame.map((regiaoExame: RegiaoExame) => {
-      return {
-        label: regiaoExame.nomeAgrupadora,
-        value: regiaoExame.nroIntAgrupadora
-      }
-    });
-  }
+  //private mountRegiaoExameOptions(listaRegiaoExame: RegiaoExame[]): any {
+  //  return listaRegiaoExame.map((regiaoExame: RegiaoExame) => {
+  //    return {
+  //      label: regiaoExame.nomeAgrupadora,
+  //      value: regiaoExame.nroIntAgrupadora
+  //    }
+  //  });
+  //}
 
   private loadFiltrosOnBuffer() {
     if (!this.filtrosOnBuffer) {

@@ -125,14 +125,24 @@ export function subscriptionComponent(_options: any): Rule {
       _options.path = normalize('/' + dirname((_options.path + '/' + _options.name) as Path));
 
       const templateSourceModulePage = apply(
-          url('./files/modules/pages/lista'), [
+          url('./files/modules/pages'), [
             renameTemplateFiles(),
               template({
                   ...strings,
                   ..._options,
               }),
-              move(_options.path+'/modules/'+_options.name+'/pages/lista-'+_options.name+'/' as string),
+              move(_options.path+'/modules/'+_options.name+'/pages/' as string),
           ]);
+
+      const templateSourceModuleRoute = apply(
+        url('./files/modules/components/module'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/modules/'+_options.name as string),
+        ]);    
       
       const templateSourceModuleComponentLista = apply(
         url('./files/modules/components/card-lista'), [
@@ -195,13 +205,13 @@ export function subscriptionComponent(_options: any): Rule {
           ]);
         
         const templateSourceModuleComponent = apply(
-          url('./files/modules'), [
+          url('./files/modules/module'), [
             renameTemplateFiles(),
               template({
                   ...strings,
                   ..._options,
               }),
-              move(_options.path+'/modules/'+_options.name as string),
+                move(_options.path+'/modules/'+_options.name as string),
           ]);
           
         const templateSourceModalCrudComponent = apply(
@@ -273,12 +283,12 @@ export function subscriptionComponent(_options: any): Rule {
             mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
             mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
             mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
-            mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite)
+            mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModuleRoute, MergeStrategy.Overwrite)
           ])
         }  
 
         if (componentName==='Create Modal components') {
-          //console.log('criar modal components');
           mergeModal = chain([
             mergeWith(templateSourceModalCrudComponent, MergeStrategy.Overwrite),
             mergeWith(templateSourceModalDetalhesComponent, MergeStrategy.Overwrite),
@@ -289,17 +299,6 @@ export function subscriptionComponent(_options: any): Rule {
         }  
 
       });
-
-      /*return chain([
-          mergeWith(templateSourceCoreComponentService, MergeStrategy.Overwrite),
-          mergeWith(templateSourceCoreComponentStore, MergeStrategy.Overwrite),
-          mergeWith(templateSourceCoreComponentTypes, MergeStrategy.Overwrite),
-          mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
-          mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
-          mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
-          mergeWith(templateSourceCoreComponent, MergeStrategy.Overwrite),
-          mergeWith(templateSourceModuleComponent, MergeStrategy.Overwrite)
-      ]);*/
 
       return chain([mergedCore, mergedList, mergeModal])
   };

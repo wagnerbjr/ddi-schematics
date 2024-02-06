@@ -15,6 +15,7 @@ import { CardFiltra<%= classify(name) %>Component } from './components/card-filt
   declarations: [
     Lista<%= classify(name) %>Component,
     CardLista<%= classify(name) %>Component,
+    CardFiltra<%= classify(name) %>Component
     //ModalConsulta<%= classify(name) %>Component
   ],
   imports: [

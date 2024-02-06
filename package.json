@@ -1,6 +1,6 @@
 {
   "name": "ddi-schematics",
-  "version": "0.0.4",
+  "version": "0.0.8",
   "description": "Automate new files creation with specifics ddi templates",
   "scripts": {
     "build": "tsc -p tsconfig.json",
