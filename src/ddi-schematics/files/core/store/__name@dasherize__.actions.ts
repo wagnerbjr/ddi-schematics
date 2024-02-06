@@ -9,10 +9,20 @@ export class <%= classify(name) %>Actions extends AbstractAction {
     super();
   }
 
-  lista<%= classify(name) %>(): void {
+  listaPesquisar<%= classify(name) %>(
+    pageNum: number,
+    pageSize: number,
+    nome: string,
+    situacao: string
+  ): void {
     this.dispatch({
       type: <%= classify(name) %>ActionTypes.LISTAR,
-      payload: this.service.lista<%= classify(name) %>()
+      payload: this.service.listaPesquisar<%= classify(name) %>(
+        pageNum,
+        pageSize,
+        nome,
+        situacao
+      )
     })
   }
 

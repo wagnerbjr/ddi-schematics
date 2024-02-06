@@ -62,14 +62,14 @@ export class CardLista<%= classify(name) %>Component implements OnInit, OnChange
 
   public emiteDesativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
     this.menuClickEvent.emit({
-      nroIntRota: row.nroIntRota,
+      nroIntRota: row.codFaltasxpto,
       menuOption: <%= classify(name) %>ActionTypes.EXCLUIR
     });
   }
 
   public emiteReativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
     this.menuClickEvent.emit({
-      nroIntRota: row.nroIntRota,
+      nroIntRota: row.codFaltasxpto,
       menuOption: <%= classify(name) %>ActionTypes.ALTERAR
     });
   }

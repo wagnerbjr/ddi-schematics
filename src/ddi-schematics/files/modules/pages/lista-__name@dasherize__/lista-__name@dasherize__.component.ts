@@ -22,6 +22,9 @@ export class Lista<%= classify(name) %>Component implements OnInit, OnDestroy {
   public lista<%= classify(name) %>: <%= classify(name) %>Lista[] = [];
   public toastrs: Toastr[] = [];
   public filtros: any = null;
+  //------ << Atributos de Lista <%= classify(name) %> para o tipo Dominio >> ------
+  // Objetivo: preencher os campos DropDown com valores pré-definidos
+  //listaTipo<%= classify(name) %>Dominio: Dominio[];
 
   public navigation = [
     {
@@ -40,13 +43,21 @@ export class Lista<%= classify(name) %>Component implements OnInit, OnDestroy {
   };
 
   private readonly subscription: Subscription = new Subscription();
-  private faltaSubscription: Subscription = null;
+  private <%= dasherize(name) %>Subscription: Subscription = null;
+
+  //------ << Descomentar para o uso de Modal >> --------
+  //Objetivo: Configurar modo de exibição
+  //private readonly OPTIONS_MODAL: NgbModalOptions = {
+  //  backdrop: 'static',
+  //  keyboard: false,
+  //  size: 'md'
+  //}
 
   constructor(
     private router: Router,
     private permissaoService: PermissaoService,
-    private faltasActions: <%= classify(name) %>Actions,
-    private faltasStore: <%= classify(name) %>Store,
+    private <%= dasherize(name) %>Actions: <%= classify(name) %>Actions,
+    private <%= dasherize(name) %>Store: <%= classify(name) %>Store,
     //private modalService: NgbModal
   ) { }
 
@@ -60,16 +71,16 @@ export class Lista<%= classify(name) %>Component implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
   }
 
-  private isAtiva(falta: <%= classify(name) %>Lista): boolean {
-    return falta.situacao == 'Ativo';
+  private isAtiva(<%= dasherize(name) %>: <%= classify(name) %>Lista): boolean {
+    return <%= dasherize(name) %>.situacao == 'Ativo';
   }
 
-  private atualizaBancasOnTable(): void {
+  private atualiza<%= classify(name) %>OnTable(): void {
     this.lista<%= classify(name) %>
-      .forEach((falta: <%= classify(name) %>Lista) => {
-        Object.assign(falta, {
-          isPodeDesativar: this.isAtiva(falta),
-          isPodeReativar: !this.isAtiva(falta)
+      .forEach((<%= dasherize(name) %>: <%= classify(name) %>Lista) => {
+        Object.assign(<%= dasherize(name) %>, {
+          isPodeDesativar: this.isAtiva(<%= dasherize(name) %>),
+          isPodeReativar: !this.isAtiva(<%= dasherize(name) %>)
         })
       });
   }
@@ -78,230 +89,228 @@ export class Lista<%= classify(name) %>Component implements OnInit, OnDestroy {
     this.toastrs = [];
   }
 
-  public handleNovaFaltaClicked(): void {
-    const modal: NgbModalRef = this.modalService.open(ModalIncluirBancaComponent, this.OPTIONS_MODAL);
+  //------ << Descomentar para o uso de Modal >> --------
+  //public handleNova<%= classify(name) %>Clicked(): void {
+  //  const modal: NgbModalRef = this.modalService.open(ModalIncluir<%= classify(name) %>Component, this.OPTIONS_MODAL);
+  //
+  //  modal.result
+  //    .then(() => {
+  //      this.exibeToastr(
+  //        '<%= classify(name) %> foi incluída.',
+  //        TipoMensagemEnum.SUCESSO
+  //      );
+  //
+  //      this.requestLista<%= classify(name) %>();
+  //    })
+  //    .catch(() => null);
+  //}
 
-    modal.result
-      .then(() => {
-        this.exibeToastr(
-          'Banca foi incluída.',
-          TipoMensagemEnum.SUCESSO
-        );
+  public handleClearErrors(): void {
+    this.clearToastr();
+  }
 
-        this.requestListaBancas();
+  public handleToastrs($event: Toastr | Toastr[]): void {
+    if (!$event) {
+      return;
+    }
+
+    const toastrs: Toastr[] = Array.isArray($event) ? $event : [$event];
+
+    toastrs.forEach((toastr: Toastr) => {
+      this.exibeToastr(toastr.mensagem, toastr.status);
+    });
+
+    return;
+  }
+
+  public redirectEvent($event: any): void {
+    //this.requestImprimirBanca();
+  }
+
+  private exibeToastr(mensagem: string, status: TipoMensagemEnum): void {
+    if (this.toastrs.find((toastr) => toastr.mensagem === mensagem)) {
+      return;
+    }
+    this.toastrs.push({
+      mensagem,
+      status
+    });
+
+    window.scroll(0, 0);
+    return;
+  }
+
+  private setPaginationBuffer(): void {
+    localStorage.setItem('paginationBuffer', JSON.stringify({ '<%= classify(name) %>': this.pageInfos }));
+  }
+
+  private getPaginationBuffer(): void {
+    const paginationBuffer: any = JSON.parse(localStorage.getItem('paginationBuffer'));
+
+    if (!paginationBuffer?.['<%= classify(name) %>']) {
+      return;
+    }
+
+    this.pageInfos = {
+      ...this.pageInfos,
+      ...paginationBuffer['<%= classify(name) %>']
+    };
+
+    return;
+  }
+
+  private setFilterBuffer(): void {
+    localStorage.setItem('filterBuffer', JSON.stringify({ '<%= classify(name) %>': this.filtros }));
+  }
+
+  private getFilterBuffer(): void {
+    const filterBuffer: any = JSON.parse(localStorage.getItem('filterBuffer'));
+
+    if (!filterBuffer?.['<%= classify(name) %>']) {
+      return;
+    }
+
+    this.filtros = {
+      ...this.filtros,
+      ...filterBuffer['<%= classify(name) %>']
+    };
+
+    return;
+  }
+
+  private requestLista<%= classify(name) %>(): Promise<void> {
+    this.<%= dasherize(name) %>Subscription?.unsubscribe();
+    this.<%= dasherize(name) %>Actions.listaPesquisar<%= classify(name) %>(
+      this.pageInfos.pageNum,
+      this.pageInfos.pageSize,
+      this.filtros.nome,
+      this.filtros.situacao
+    );
+
+    return new Promise((resolve, reject) => {
+      this.<%= dasherize(name) %>Subscription = this.<%= dasherize(name) %>Store
+        .state$
+        .subscribe((data: <%= classify(name) %>State) => {
+          if (data.<%= classify(name) %>.hasErrors) {
+            const rawMessage: string = data.<%= classify(name) %>.errorMessage;
+
+            this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
+            this.<%= dasherize(name) %>Subscription?.unsubscribe();
+            reject();
+            return;
+          }
+          if (data.<%= classify(name) %>.data) {
+            const payload: <%= classify(name) %>Lista | <%= classify(name) %>Lista[] = data.<%= classify(name) %>.data
+
+            this.lista<%= classify(name) %> = Array.isArray(payload) ? payload : [payload];
+            this.<%= dasherize(name) %>Subscription?.unsubscribe();
+            this.atualiza<%= classify(name) %>OnTable();
+            resolve();
+          }
       })
-      .catch(() => null);
+    });
+  }
+
+  public handleFiltros($event: any): void {
+    const gerenciaFiltros: Function = (filtros: any) => {
+      this.pageInfos.pageSize = this.pageInfos.pageSize || 10;
+      this.pageInfos.pageNum = 1;
+
+      this.setPaginationBuffer();
+
+      return {
+        pageSize: this.pageInfos.pageSize,
+        pageNum: this.pageInfos.pageNum,
+        nome: filtros.nome,
+        situacao: [undefined, null].includes(filtros.situacao)
+          ? null
+          : filtros.situacao,
+        regiaoExames: [undefined, null].includes(filtros.regiaoExames)
+          ? null
+          : filtros.regiaoExames,
+        qtdExaminador: filtros.qtdExaminador,
+        distribuicao: [undefined, null].includes(filtros.distribuicao)
+          ? null
+          : filtros.distribuicao
+      }
     }
 
-    public handleClearErrors(): void {
-      this.clearToastr();
-    }
-  
-    public handleToastrs($event: Toastr | Toastr[]): void {
-      if (!$event) {
-        return;
-      }
-  
-      const toastrs: Toastr[] = Array.isArray($event) ? $event : [$event];
-  
-      toastrs.forEach((toastr: Toastr) => {
-        this.exibeToastr(toastr.mensagem, toastr.status);
-      });
-  
-      return;
-    }
-  
-    public redirectEvent($event: any): void {
-      //this.requestImprimirBanca();
-    }
-  
-    private exibeToastr(mensagem: string, status: TipoMensagemEnum): void {
-      if (this.toastrs.find((toastr) => toastr.mensagem === mensagem)) {
-        return;
-      }
-      this.toastrs.push({
-        mensagem,
-        status
-      });
-  
-      window.scroll(0, 0);
-      return;
-    }
-  
-    private setPaginationBuffer(): void {
-      localStorage.setItem('paginationBuffer', JSON.stringify({ 'bancas': this.pageInfos }));
-    }
-  
-    private getPaginationBuffer(): void {
-      const paginationBuffer: any = JSON.parse(localStorage.getItem('paginationBuffer'));
-  
-      if (!paginationBuffer?.['bancas']) {
-        return;
-      }
-  
-      this.pageInfos = {
-        ...this.pageInfos,
-        ...paginationBuffer['bancas']
-      };
-  
-      return;
-    }
-  
-    private setFilterBuffer(): void {
-      localStorage.setItem('filterBuffer', JSON.stringify({ 'bancas': this.filtros }));
-    }
-  
-    private getFilterBuffer(): void {
-      const filterBuffer: any = JSON.parse(localStorage.getItem('filterBuffer'));
-  
-      if (!filterBuffer?.['bancas']) {
-        return;
-      }
-  
-      this.filtros = {
+    this.filtros = gerenciaFiltros($event);
+
+    this.requestLista<%= classify(name) %>();
+
+    this.clearToastr();
+  }
+
+  public handlePagination($event: any) {
+    const gerenciaFiltros: Function = (filtros: any) => {
+      this.pageInfos.pageSize = filtros.pageSize
+        ? filtros.pageSize
+        : this.filtros?.pageSize || this.pageInfos.pageSize;
+      this.pageInfos.pageNum = filtros.pageNum
+        ? filtros.pageNum
+        : this.filtros?.pageNum || this.pageInfos.pageNum;
+
+      this.setPaginationBuffer();
+
+      return {
         ...this.filtros,
-        ...filterBuffer['bancas']
+        pageSize: this.pageInfos.pageSize,
+        pageNum: this.pageInfos.pageNum
       };
-  
+    };
+
+    this.filtros = gerenciaFiltros($event);
+
+    this.requestLista<%= classify(name) %>();
+
+    window.scrollTo(0, 0);
+  }
+
+  public handleRowCLick(nroInt<%= classify(name) %>: number): void {
+    this.consultar<%= classify(name) %>(nroInt<%= classify(name) %>);
+  }
+
+  public menuClickHandler($event: any): void {
+    const menuOptions: Map<<%= classify(name) %>ActionTypes, Function> = new Map([
+      [<%= classify(name) %>ActionTypes.CONSULTAR, () => this.consultar<%= classify(name) %>($event.<%= dasherize(name) %>.nroIntRota)],
+      //[<%= classify(name) %>ActionsTypes.EXCLUIR, () => this.exibeModalConfirmacaoDesativar<%= classify(name) %>($event.nroIntRota)],
+      //[<%= classify(name) %>ActionsTypes.ALTERAR, () => this.exibeModalConfirmacaoReativar<%= classify(name) %>($event.nroIntRota)]
+    ])
+
+    this.clearToastr();
+
+    return menuOptions.get($event.menuOption)?.bind(this)();
+  }
+
+  private consultar<%= classify(name) %>(nroInt<%= classify(name) %>: number): void {
+    this.router.navigate(
+      [PrvRoutesLibrary.FALTA.CONSULTA.setPathParams(nroInt<%= classify(name) %>).getUrl()]
+    );
+  }
+
+
+  public refreshList(): void {
+    if (!this.filtros) {
       return;
     }
-  
-    private requestLista<%= classify(name) %>(): Promise<void> {
-      this.faltaSubscription?.unsubscribe();
-      this.faltasActions.listaPesquisar<%= classify(name) %>(
-        this.pageInfos.pageNum,
-        this.pageInfos.pageSize,
-        this.filtros.nome,
-        this.filtros.situacao,
-        this.filtros.regiaoExames,
-        this.filtros.qtdExaminador,
-        this.filtros.distribuicao
-      );
-  
-      return new Promise((resolve, reject) => {
-        this.faltaSubscription = this.faltasStore
-          .state$
-          .subscribe((data: <%= classify(name) %>State) => {
-            if (data.<%= dasherize(name) %>.hasErrors) {
-              const rawMessage: string = data.<%= dasherize(name) %>.errorMessage;
-  
-              this.exibeToastr(ErrorHandlerUtil.getMessage(rawMessage), ErrorHandlerUtil.getStatus(rawMessage));
-              this.faltaSubscription?.unsubscribe();
-              reject();
-              return;
-            }
-            if (data.<%= dasherize(name) %>.data) {
-              const payload: <%= classify(name) %>Lista | <%= classify(name) %>Lista[] = data.<%= dasherize(name) %>.data
-  
-              this.lista<%= classify(name) %> = Array.isArray(payload) ? payload : [payload];
-              this.faltaSubscription?.unsubscribe();
-              this.atualizaBancasOnTable();
-              resolve();
-            }
-        })
-      });
-    }
-  
-    public handleFiltros($event: any): void {
-      const gerenciaFiltros: Function = (filtros: any) => {
-        this.pageInfos.pageSize = this.pageInfos.pageSize || 10;
-        this.pageInfos.pageNum = 1;
-  
-        this.setPaginationBuffer();
-  
-        return {
-          pageSize: this.pageInfos.pageSize,
-          pageNum: this.pageInfos.pageNum,
-          nome: filtros.nome,
-          situacao: [undefined, null].includes(filtros.situacao)
-            ? null
-            : filtros.situacao,
-          regiaoExames: [undefined, null].includes(filtros.regiaoExames)
-            ? null
-            : filtros.regiaoExames,
-          qtdExaminador: filtros.qtdExaminador,
-          distribuicao: [undefined, null].includes(filtros.distribuicao)
-            ? null
-            : filtros.distribuicao
-        }
-      }
-  
-      this.filtros = gerenciaFiltros($event);
-  
-      this.requestLista<%= classify(name) %>();
-  
-      this.clearToastr();
-    }
-  
-    public handlePagination($event: any) {
-      const gerenciaFiltros: Function = (filtros: any) => {
-        this.pageInfos.pageSize = filtros.pageSize
-          ? filtros.pageSize
-          : this.filtros?.pageSize || this.pageInfos.pageSize;
-        this.pageInfos.pageNum = filtros.pageNum
-          ? filtros.pageNum
-          : this.filtros?.pageNum || this.pageInfos.pageNum;
-  
-        this.setPaginationBuffer();
-  
-        return {
-          ...this.filtros,
-          pageSize: this.pageInfos.pageSize,
-          pageNum: this.pageInfos.pageNum
-        };
-      };
-  
-      this.filtros = gerenciaFiltros($event);
-  
-      this.requestLista<%= classify(name) %>();
-  
-      window.scrollTo(0, 0);
-    }
-  
-    public handleRowCLick(nroIntRota: number): void {
-      this.consultarBanca(nroIntRota);
-    }
-  
-    public menuClickHandler($event: any): void {
-      const menuOptions: Map<<%= classify(name) %>ActionTypes, Function> = new Map([
-        [<%= classify(name) %>ActionTypes.CONSULTAR, () => this.consultarBanca($event.banca.nroIntRota)],
-        //[<%= classify(name) %>ActionsTypes.EXCLUIR, () => this.exibeModalConfirmacaoDesativarBanca($event.nroIntRota)],
-        //[<%= classify(name) %>ActionsTypes.ALTERAR, () => this.exibeModalConfirmacaoReativarBanca($event.nroIntRota)]
-      ])
-  
-      this.clearToastr();
-  
-      return menuOptions.get($event.menuOption)?.bind(this)();
-    }
-  
-    private consultarBanca(nroIntBanca: number): void {
-      this.router.navigate(
-        [PrvRoutesLibrary.FALTA.CONSULTA.setPathParams(nroIntBanca).getUrl()]
-      );
-    }
-  
-  
-    public refreshList(): void {
-      if (!this.filtros) {
-        return;
-      }
-  
-      this.requestLista<%= classify(name) %>();
-    }
-  
-    get permissaoConsulta(): boolean {
-      return this.permissaoService.validarPermissao('ROTA', 'LISTA', 'PRV');
-    }
-  
-    get permissaoInclusao(): boolean {
-      return this.permissaoService.validarPermissao('ROTA', 'INCLUI', 'PRV');
-    }
-  
-    get isLoading(): boolean {
-      return (
-        this.faltasStore.state.<%= dasherize(name) %>.isLoading
-      );
-    }
+
+    this.requestLista<%= classify(name) %>();
+  }
+
+  get permissaoConsulta(): boolean {
+    return this.permissaoService.validarPermissao('ROTA', 'LISTA', 'PRV');
+  }
+
+  get permissaoInclusao(): boolean {
+    return this.permissaoService.validarPermissao('ROTA', 'INCLUI', 'PRV');
+  }
+
+  get isLoading(): boolean {
+    return (
+      this.<%= dasherize(name) %>Store.state.<%= classify(name) %>.isLoading
+    );
+  }
   
   
 }*/
