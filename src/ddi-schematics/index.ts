@@ -1,4 +1,5 @@
 import { basename, dirname, normalize, Path, strings } from "@angular-devkit/core";
+import { dasherize } from "@angular-devkit/core/src/utils/strings";
 import {
 	apply,
 	chain,
@@ -10,7 +11,8 @@ import {
 	SchematicContext,
 	template,
 	Tree,
-	url
+	url,
+  filter
 } from '@angular-devkit/schematics';
 
 interface SchemaOptions {
@@ -118,10 +120,15 @@ function generateComponent(options: any): Rule {
   };
 }
 
+function filterModuleTemplates(_options: any): Rule {
+    //return filter(name => !name.match(/\.module\.ts$/) && !name.match(/-item\.ts$/) && !path.match(/\.bak$/));
+    return filter(path => !path.match(/\types\$/) && !path.match(/\store\$/) && !path.match(/\service\$/) && !path.match(/\details\$/) );
+}
+
 export function subscriptionComponent(_options: any): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
 
-      _options.name = basename(_options.name as Path);
+      _options.name = basename(dasherize(_options.name) as Path);
       _options.path = normalize('/' + dirname((_options.path + '/' + _options.name) as Path));
 
       const templateSourceModulePage = apply(
@@ -142,7 +149,17 @@ export function subscriptionComponent(_options: any): Rule {
                 ..._options,
             }),
             move(_options.path+'/modules/'+_options.name as string),
-        ]);    
+        ]);
+        
+      const templateSourceModuleComponentCardDetalhes = apply(
+        url('./files/modules/components/card-detalhes'), [
+          renameTemplateFiles(),
+            template({
+                ...strings,
+                ..._options,
+            }),
+            move(_options.path+'/modules/'+_options.name+'/components/card-detalhes' as string),
+        ]);  
       
       const templateSourceModuleComponentLista = apply(
         url('./files/modules/components/card-lista'), [
@@ -194,12 +211,17 @@ export function subscriptionComponent(_options: any): Rule {
               move(_options.path+'/core/'+_options.name+'/types' as string),
           ]);
 
+        //const excludeFacade = _options.path.match(/^((?!type).)*$/);
+        //let teste = '';
+        //_options.createComponents.map((componentName: string) => teste = componentName);
+
         const templateSourceCoreComponent = apply(
           url('./files/core'), [
+            filterModuleTemplates(_options),
             renameTemplateFiles(),
               template({
                   ...strings,
-                  ..._options,
+                  ..._options
               }),
               move(_options.path+'/core/'+_options.name as string),
           ]);
@@ -268,6 +290,8 @@ export function subscriptionComponent(_options: any): Rule {
       let mergedList = chain([]);
       let mergeModal = chain([]);
 
+      
+
       _options.createComponents.map((componentName: string) => {
         if (componentName==='Create Core components') {
           mergedCore = chain([
@@ -280,6 +304,7 @@ export function subscriptionComponent(_options: any): Rule {
         
         if (componentName==='Create List components') {
           mergedList = chain([
+            mergeWith(templateSourceModuleComponentCardDetalhes, MergeStrategy.Overwrite),
             mergeWith(templateSourceModuleComponentFiltra, MergeStrategy.Overwrite),
             mergeWith(templateSourceModuleComponentLista, MergeStrategy.Overwrite),
             mergeWith(templateSourceModulePage, MergeStrategy.Overwrite),
@@ -296,7 +321,25 @@ export function subscriptionComponent(_options: any): Rule {
             mergeWith(templateSourceModalExcluirComponent, MergeStrategy.Overwrite),
             mergeWith(templateSourceModalIncluirComponent, MergeStrategy.Overwrite)
           ]);
-        }  
+        }
+
+        if (componentName==='Create Details component (only)') {
+          const templateSourceCoreDtoDetails = apply(
+            url('./files/core/details'), [
+              renameTemplateFiles(),
+                template({
+                    ...strings,
+                    ..._options,
+                }),
+                move(_options.path+'/core/'+_options.name+'/types' as string),
+            ]); 
+
+          mergeModal = chain([
+            mergeWith(templateSourceModuleComponentCardDetalhes, MergeStrategy.Overwrite),
+            mergeWith(templateSourceModuleRoute, MergeStrategy.Overwrite),
+            mergeWith(templateSourceCoreDtoDetails, MergeStrategy.Overwrite)
+          ])
+        }
 
       });
 

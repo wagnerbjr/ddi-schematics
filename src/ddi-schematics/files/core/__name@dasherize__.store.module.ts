@@ -15,8 +15,8 @@ import { <%= classify(name) %>Store } from "./store/<%= dasherize(name) %>.store
 
 export class  <%= classify(name) %>StoreModule {
   constructor(
-    protected <%= dasherize(name) %>Store: <%= classify(name) %>Store,
-    protected <%= dasherize(name) %>Actions: <%= classify(name) %>Actions,
-    protected <%= dasherize(name) %>Service: <%= classify(name) %>Service
+    protected <%= camelize(name) %>Store: <%= classify(name) %>Store,
+    protected <%= camelize(name) %>Actions: <%= classify(name) %>Actions,
+    protected <%= camelize(name) %>Service: <%= classify(name) %>Service
   ) {}
 }*/

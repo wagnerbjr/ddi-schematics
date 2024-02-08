@@ -1,0 +1,127 @@
+<div class="card-container">
+
+  <div class="header-container">
+    <h2><%= classify(name) %></h2>
+    <div class="buttons-container">
+      <ng-container *ngIf="!isEdicao && is<%= classify(name) %>Ativa">
+        <button
+          *ngIf="permissaoEditar"
+          type="button"
+          class="btn btn-primary btn-editar"
+          (click)="handleEditarClick()"
+        >EDITAR</button>
+      </ng-container>
+      <ng-container *ngIf="isEdicao">
+        <button
+          type="button"
+          class="btn btn-outline-warning btn-cancelar"
+          (click)="handleCancelarClick()"
+        >CANCELAR</button>
+        <button
+          type="button"
+          class="btn btn-primary btn-salvar"
+          (click)="handleSalvarClick()"
+          [disabled]="!isSalvarEnabled"
+        >SALVAR</button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="body-container">
+
+    <div class="display-row">
+      <div class="row">
+        <div class="input-field-wrapper" id="nome-wrapper">
+          <label
+              for="nome"
+              id="nome-label"
+              class="input-field-label"
+            >Nome: * </label>
+            <input
+              type="text"
+              id="nome"
+              class="input-field"
+              [disabled]="!isEdicao"
+              [ngClass]="{ 'disabled': !isEdicao }"
+              [(ngModel)]="nome<%= classify(name) %>"
+            />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field-wrapper">
+          <label
+              for="situacao"
+              id="situacao-label"
+              class="input-field-label"
+            >Situação: * </label>
+            <input
+              type="text"
+              id="situacao"
+              class="input-field disabled"
+              disabled
+              [ngModel]="situacao"
+            />
+        </div>
+      </div>
+    
+      <p class="required-field-info">(*) Campos Obrigatórios</p>
+
+    </div>
+
+    <div class="control-fields-container">
+      <div class="control-inclusao-container">
+        <span class="control-fields-header">Inclusão</span>
+        <div class="control-fields-wrapper">
+          <div class="control-field-wrapper">
+            <label
+              id="cliente-operador-inclusao-label"
+              for="cliente-operador-inclusao"
+              class="control-field-label"
+            >Cliente/Operador: </label>
+            <span id="cliente-operador-inclusao"
+            >{{<%= dasherize(name) %>?.ctrOrgInc || 'Não informado'}}/{{<%= dasherize(name) %>?.ctrUsuInc || 'Não informado'}}
+            </span>
+          </div>
+          <div class="control-field-wrapper">
+            <label
+              id="data-horainclusao-inclusao-label"
+              for="data-horainclusao-inclusao"
+              class="control-field-label"
+            >Data e Hora: </label>
+            <span id="data-hora-inclusao"
+            >{{dataInclusao + ' ' + horaInclusao}}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="vertical-separator"></div>
+      <div class="control-alteracao-container">
+        <span class="control-fields-header">Alteração</span>
+        <div class="control-fields-wrapper">
+          <div class="control-field-wrapper">
+            <label
+              id="cliente-operador-alteracao-label"
+              for="cliente-operador-alteracao"
+              class="control-field-label"
+            >Cliente/Operador: </label>
+            <span
+              id="cliente-operador-alteracao"
+            >{{<%= dasherize(name) %>.ctrOrgAtu || 'Não informado'}}/{{<%= dasherize(name) %>.ctrUsuAtu || 'Não informado'}}
+            </span>
+          </div>
+          <div class="control-field-wrapper">
+            <label
+              id="data-hora-alteracao-label"
+              for="data-hora-alteracao"
+              class="control-field-label"
+            >Data e Hora: </label>
+            <span id="data-hora-alteracao"
+            >{{dataAtualizacao + ' ' + horaAtualizacao}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

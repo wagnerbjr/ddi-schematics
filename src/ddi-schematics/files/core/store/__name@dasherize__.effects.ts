@@ -6,13 +6,13 @@ import { <%= classify(name) %>ActionTypes } from "./<%= dasherize(name) %>.actio
   providedIn: 'root'
 })
 export class <%= classify(name) %>Effects extends AbstractEffect {
-constructor() {
-  super();
+  constructor() {
+    super();
 
-  this.registerAfterEffects({
-    type: `${<%= classify(name) %>ActionTypes.LISTAR}_FULFILLED`,
-    effect: () => {}
-  });
-}
+    this.registerAfterEffects({
+      type: `${<%= classify(name) %>ActionTypes.LISTAR}_FULFILLED`,
+      effect: () => {}
+    });
+  }
 }
 */
