@@ -1,25 +1,52 @@
-<div
-  *ngIf="!!lista<%= classify(name) %>.length"
-  class="card-lista-<%= dasherize(name) %>-container"
->
-    <div class="table-container">
-      <div class="button-print-wrapper">
-        <div (click)="imprimirEvent()" class="botao-impressao">
-          <span class="contorno-icone"><i class="di di-print icon-impressao"></i></span>
-          <span class="span-spaced">Imprimir</span>
+<div *ngIf="permissaoConsultar; else noPermission">
+  <div class="detalhes-<%= dasherize(name) %>-container">
+
+    <div class="navigation-container">
+      <div class="navigation-wrapper">
+        <div class="navigation-item" *ngFor="let item of navigation">
+          <span (click)="item.onClick()">{{item.text}}</span>
+          <span *ngIf="navigation.indexOf(item) !== navigation.length - 1">/</span>
         </div>
       </div>
-      <ddi-table
-        [rowClickable]="true"
-        [columns]="colunas"
-        [data]="lista<%= classify(name) %>"
-        [pageSize]="pageInfos.pageSize"
-        [currentPage]="pageInfos.pageNum"
-        [collectionSize]="totalRegistros"
-        (pageChange)="handlePageChange($event)"
-        (rowClick)="handleRowClick($event)"
-        (itemMenuClick)="handleMenuClick($event)"
-      >
-      </ddi-table>
     </div>
+
+    <div *ngFor="let toastr of toastrs">
+      <app-prv-toastr
+        [toastrInfo]="toastr"
+        [autoDestroy]="false"
+        (clearToastr)="clearToastr($event)"
+      ></app-prv-toastr>
+    </div>
+
+    <div class="header-container">
+      <h2 class="header-page">DETALHES DA <%= classify(name) %></h2>
+      <div class="buttons-container">
+        <button
+          class="btn btn-primary btn-reenviar-chave-de-acesso"
+          type="button"
+          (click)="goBack()"
+        >VOLTAR</button>
+      </div>
+    </div>
+
+    <div class="cards-container">
+      <div class="card-<%= dasherize(name) %>-wrapper">
+        <app-card-detalhes-<%= dasherize(name) %>
+          [<%= dasherize(name) %>]="<%= dasherize(name) %>"
+          (alterar<%= classify(name) %>Event)="handleAlterar<%= classify(name) %>($event)"
+        ></app-card-detalhes-<%= dasherize(name) %>>
+      </div>
+      <div class="card-categorias-wrapper">
+        <app-card-lista-<%= dasherize(name) %>
+          [<%= dasherize(name) %>]="<%= dasherize(name) %>"
+          (toastr)="handleToastr($event)"
+        ></app-card-lista-<%= dasherize(name) %>>
+      </div>
+    </div>
+
   </div>
+</div>
+<ng-template #noPermission>
+  <span>Você não tem permissao para acessar essa funcionalidade.</span>
+</ng-template>
+<ddi-loader [isLoading]="isLoading"></ddi-loader>

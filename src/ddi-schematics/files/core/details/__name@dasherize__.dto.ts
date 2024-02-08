@@ -20,31 +20,4 @@ export interface <%= classify(name) %> {
   ctrHmsInc: number;
   ctrHmsAtu: number;
 }
-
-// INSERCAO MODAL ALTERAR
- 
-  export interface <%= classify(name) %>DetalhesDTO{
-  codigo?: number;
-  descricao?: string;
-  situacao?: number;
-  tpTurma?: string;
-  data?: any;
-  permiteEdicao?: string;
-  clienteOperadorInclusaoFormatado?:string;
-  clienteOperadorAtualizacaoFormatado?: string;
-  dataInclusaoFormatada?: string;
-  dataAtualizacaoFormatada?: string;
-  }
- 
-  // ** MODAL DE INCLUSAO
- 
-  export interface <%= classify(name) %>InclusaoDTO{
-  codigo?: number;
-  descricao?: string;
-  situacao?: number;
-  tpTurma?: string;
-  data?: any;
-  }
-tem menu de contexto
-  
 */

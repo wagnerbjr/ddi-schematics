@@ -1,76 +1,147 @@
-/*@import '@ddi/bootstrap/scss/detran/variables';
+@import '@ddi/bootstrap/scss/detran/variables';
 
-.lista-<%= dasherize(name) %>-container {
-  .navigation-container {
-    display: grid;
-    grid-template-columns: 97.5% 2.5%;
+.modal-container {
+  padding: 1.5rem;
 
-    .navigation-wrapper {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 30px;
-
-      .navigation-item {
-        margin-right: 10px;
-        color: $orange-dark;
-        font-weight: 400;
-        font-size: 15px;
-        cursor: pointer;
-
-        span:first-of-type {
-          margin-right: 10px;
-        }
-      }
-
-      .navigation-item:last-of-type {
-        color: black;
-        text-decoration: underline;
-      }
-
-    }
-    .navigation-item-goback {
-      color: black;
-      font-weight: 400;
-      font-size: 15px;
-      cursor: pointer;
-    }
-  }
-
-  .header-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    font-family: Roboto, "Helvetica Neue";
-    min-width: 680px;
-
-    .header-page {
-      margin-bottom: 35px;
-      font-size: 24px;
-    }
-
-    .card-buttons-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: flex-end;
-      margin-bottom: 20px;
-
-      .button-criar {
-        background-color: $orange-dark;
-      }
-    }
-  }
-
-  .lista-novo-wrapper {
+  .toastrs-container {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    .toastr-wrapper {
+      width: 98%;
+    }
+  }
+  .modal-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .modal-header-title {
+      display: flex;
+      flex-direction: column;
+
+      .modal-header-title-main {
+        font-size: 18px;
+      }
+    }
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .grid-container {
+      display: grid;
+
+      .grid-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .input-field-wrapper {
+          display: flex;
+          flex-direction: column;
+
+          .calendar-field-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 100%;
+
+            .icon-wrapper {
+              width: fit-content;
+              cursor: pointer;
+
+              .di-calendar {
+                border: 1px solid $dark;
+                border-radius: 0;
+                background-color: transparent;
+              }
+            }
+          }
+
+          .input-field-label {
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: normal;
+            color: $gray-200;
+          }
+          .input-field {
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid $dark;
+            padding-left: 15px;
+            height: 40px;
+            border-radius: 2.5px;
+          }
+          .input-field-calendar {
+            font-size: 14px;
+            border: 1px solid $dark;
+            padding-left: 15px;
+            height: 40px;
+            border-radius: 2.5px;
+            width: 100%;
+          }
+          .select-field {
+            ::ng-deep .ng-select-container {
+              font-size: 14px;
+              font-weight: bold;
+              border: 1px solid $dark;
+              padding-left: 5px;
+              height: 40px;
+              border-radius: 2.5px;
+            }
+          }
+          .textarea-field {
+            width: 100%;
+            height: 75px;
+            padding: 5px 10px;
+            text-align: start;
+            resize: none;
+            border: 1px solid $dark;
+            border-radius: 2.5px;
+          }
+          .textarea-field:disabled, .input-field-calendar:disabled {
+            background-color: rgb(226, 226, 226);
+          }
+        }
+        .grid-row {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    }
+    .required-fields-info {
+      margin-top: 1rem;
+      color: $red;
+    }
   }
 }
 
-@media screen and (max-width: 680px) {
-  .lista-novo-container {
-    overflow-x: auto;
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 1.5rem;
+  gap: 1rem;
+
+  .btn-primary {
+    background-color: $orange-dark;
+    margin-right: 16px;
   }
-}*/
+  .btn-outline-warning {
+    border-color: $orange-dark;
+    color: $orange-dark;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}

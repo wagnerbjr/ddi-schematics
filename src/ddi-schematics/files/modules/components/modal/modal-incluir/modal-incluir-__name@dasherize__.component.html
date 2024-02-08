@@ -1,25 +1,117 @@
-<div
-  *ngIf="!!lista<%= classify(name) %>.length"
-  class="card-lista-<%= dasherize(name) %>-container"
->
-    <div class="table-container">
-      <div class="button-print-wrapper">
-        <div (click)="imprimirEvent()" class="botao-impressao">
-          <span class="contorno-icone"><i class="di di-print icon-impressao"></i></span>
-          <span class="span-spaced">Imprimir</span>
+<div *ngIf="!isloadingModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <div class="modal-header-title">
+        <h2 class="modal-header-title-main">{{tituloModal}}</h2>
+      </div>
+      <button
+        id="icon-close"
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="toastrs-container">
+      <div *ngFor="let toastr of toastrs" class="toastr-wrapper">
+        <app-prv-toastr
+          class="toastr"
+          [toastrInfo]="toastr"
+          [autoDestroy]="false"
+          borderShape="square"
+          (clearToastr)="clearToastrs()"
+        ></app-prv-toastr>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="grid-container">
+        <div>
+          <!-- lembrar de importar no modulo o FormsModule, NgSelectModule, ReactiveFormsModule-->
+          <form class="grid-column">
+            <div class="input-field-wrapper">
+              <label
+                class="input-field-label"
+                id="descricao-label"
+                for="descricao"
+              >Input de text area: *</label>
+              <textarea
+                id="descricao"
+                [(ngModel)]="turmaForm.descricao"
+                type="text"
+                class="textarea-field"
+                maxlength="50"
+              ></textarea>
+              <span class="input-info">{{ 50 - turmaForm.descricao?.length }} caracteres restantes.</span>
+            </div>
+            <div class="input-field-wrapper">
+              <label
+                class="input-field-label"
+                id="ativo-label"
+                for="turma"
+              >Input de seleção por valor string: *</label>
+              <select id="turma" [(ngModel)]="turmaForm.turma" name="turma" class="select-field">
+                <option *ngFor="let turma of turmaOptions" [value]="turmaOption.value">{{turmaOption.label}}</option>
+              </select>
+            </div>
+            <div class="input-field-wrapper">
+              <label
+                class="input-field-label"
+                id="ativo-label"
+                for="turma"
+              >Input de seleção por valor number: *</label>
+              <select id="turma" [(ngModel)]="turmaForm.ativo" name="turma" class="select-field">
+                <option *ngFor="let ativo of ativoOptions" [value]="ativoOption.value">{{ativoOption.label}}</option>
+              </select>
+            </div>
+            <div class="input-field-wrapper">
+              <label
+                for="seletorData"
+                id="seletorData-label"
+                class="input-field-label"
+              >Seleção de Data: </label>
+              <!-- lembrar de importar DetranDateFormatModule, NgbDatepickerModule, FormsModule-->
+              <!-- inserido somente para adiantar, deve implementar ainda o que for necessário -->
+              <div class="calendar-field-wrapper">
+                <input
+                  [(ngModel)]="turmaForm.seletorData"
+                  id="seletorData"
+                  name="seletorData"
+                  type="text"
+                  class="input-field-calendar"
+                  maxlength="10"
+                  ddiDateFormat
+                  ngbDatepicker
+                  #seletorData="ngbDatepicker"
+                > <!-- verificar a conversão de valores no TS tratando de data, temos conversões em PrvDateUtil -->
+                <div class="input-group-append icon-wrapper" (click)="seletorData.toggle()">
+                  <em class="input-group-text di di-calendar"></em>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      <ddi-table
-        [rowClickable]="true"
-        [columns]="colunas"
-        [data]="lista<%= classify(name) %>"
-        [pageSize]="pageInfos.pageSize"
-        [currentPage]="pageInfos.pageNum"
-        [collectionSize]="totalRegistros"
-        (pageChange)="handlePageChange($event)"
-        (rowClick)="handleRowClick($event)"
-        (itemMenuClick)="handleMenuClick($event)"
-      >
-      </ddi-table>
+      <span style='color:#f36b6b'>(*) Campos Obrigatórios.</span>
     </div>
   </div>
+
+  <div class="buttons-container">
+    <button
+      type="button"
+      class="btn btn-outline-warning btn-voltar"
+      (click)="activeModal.dismiss()"
+    >CANCELAR</button>
+    <button
+      type="button"
+      class="btn btn-primary btn-salvar"
+      (click)="handleSalvarClick()"
+      [disabled]="isFormValid()"
+    >SALVAR</button>
+  </div>
+
+</div>
+<ddi-loader [isLoading]="isloadingModal"></ddi-loader>
+

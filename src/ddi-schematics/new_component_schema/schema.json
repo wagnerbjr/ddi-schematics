@@ -31,7 +31,8 @@
         "items": [
           "Create Core components",
           "Create List components", 
-          "Create Modal components"
+          "Create Modal components",
+          "Create Details component (only)"
         ]
       },
       "alias": "cm"

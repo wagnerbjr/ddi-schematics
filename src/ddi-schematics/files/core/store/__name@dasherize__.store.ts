@@ -1,4 +1,5 @@
-/*import { Injectable } from "@angular/core";
+/*import { camelize } from "@angular-devkit/core/src/utils/strings";
+import { Injectable } from "@angular/core";
 import { AbstractStore } from "@ddi-ng/store";
 import { <%= classify(name) %>State } from "../types/<%= dasherize(name) %>.state";
 import { <%= classify(name) %>ActionTypes } from "./<%= dasherize(name) %>.actions.types";
@@ -8,7 +9,7 @@ import { <%= classify(name) %>ActionTypes } from "./<%= dasherize(name) %>.actio
 })
 export class <%= classify(name) %>Store extends AbstractStore<<%= classify(name) %>State> {
 static defaultState: <%= classify(name) %>State = {
-  <%= classify(name) %>: {
+  <%= camelize(name) %>: {
     data: undefined,
     isLoading: false,
     hasErrors: false,
@@ -50,6 +51,9 @@ reducer({ state, type, payload }) {
     }
   }
   const options: any = {
+    [`${<%= classify(name) %>ActionTypes.PESQUISAR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.PESQUISAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.PESQUISAR}_REJECTED`]: () => ({ ...stores.rejected }),
     [`${<%= classify(name) %>ActionTypes.LISTAR}_PENDING`]: () => ({ ...stores.pending }),
     [`${<%= classify(name) %>ActionTypes.LISTAR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
     [`${<%= classify(name) %>ActionTypes.LISTAR}_REJECTED`]: () => ({ ...stores.rejected }),
@@ -64,7 +68,13 @@ reducer({ state, type, payload }) {
     [`${<%= classify(name) %>ActionTypes.ALTERAR}_REJECTED`]: () => ({ ...stores.rejected }),
     [`${<%= classify(name) %>ActionTypes.EXCLUIR}_PENDING`]: () => ({ ...stores.pending }),
     [`${<%= classify(name) %>ActionTypes.EXCLUIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
-    [`${<%= classify(name) %>ActionTypes.EXCLUIR}_REJECTED`]: () => ({ ...stores.rejected })
+    [`${<%= classify(name) %>ActionTypes.EXCLUIR}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.RELATORIO}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.RELATORIO}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.RELATORIO}_REJECTED`]: () => ({ ...stores.rejected }),
+    [`${<%= classify(name) %>ActionTypes.IMPRIMIR}_PENDING`]: () => ({ ...stores.pending }),
+    [`${<%= classify(name) %>ActionTypes.IMPRIMIR}_FULFILLED`]: () => ({ ...stores.fulfilled }),
+    [`${<%= classify(name) %>ActionTypes.IMPRIMIR}_REJECTED`]: () => ({ ...stores.rejected })    
   }
 
   return !!options[type]

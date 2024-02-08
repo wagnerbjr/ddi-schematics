@@ -1,164 +1,131 @@
-/*import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { <%= classify(name) %>ActionTypes } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions.types';
-import { <%= classify(name) %>Lista } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>.dto';
-import { PrvUtil } from '@core/utils/prv.util';
-import { Action } from '@ddi-ng/layout';
-import { ColumnType, TableColumn } from '@ddi-ng/layout/lib/table/_types';
-import { PermissaoService } from '@ddi-ng/permissao';
+/*
+import { Component } from '@angular/core';
+import { <%= classify(name) %>Actions } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.actions';
+import { <%= classify(name) %>Store } from '@core/<%= dasherize(name) %>/store/<%= dasherize(name) %>.store';
+import { <%= classify(name) %>InclusaoDTO } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>';
+import { <%= classify(name) %>State } from '@core/<%= dasherize(name) %>/types/<%= dasherize(name) %>.state';
+import { Toastr } from '@core/types/toastr.type';
+import { ErrorHandlerUtil } from '@core/utils/error-handler.util';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { TipoMensagemEnum } from 'app/shared/enums/tipe-mensagem.enum';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-card-lista-<%= dasherize(name) %>',
-  templateUrl: './card-lista-<%= dasherize(name) %>.component.html',
-  styleUrls: ['./card-lista-<%= dasherize(name) %>.component.scss']
+  selector: 'app-modal-incluir-<%= dasherize(name) %>',
+  templateUrl: './modal-incluir-<%= dasherize(name) %>.component.html',
+  styleUrls: ['./modal-incluir-<%= dasherize(name) %>.component.scss']
 })
-export class CardLista<%= classify(name) %>Component implements OnInit, OnChanges {
+export class ModalIncluir<%= classify(name) %>Component {
+  public toastrs: Toastr[] = [];
+  public seletorData = null;
+  public isloadingModal = false;
+  public tituloModal: string;
+  public <%= camelize(name) %>InclusaoDTO: <%= classify(name) %>InclusaoDTO;
 
-  @Input() lista<%= classify(name) %>: <%= classify(name) %>Lista[] = [];
-  @Input() pageInfos: any = null;
+  // ex - com o ngFor determinamos a label do select por seu valor numerico
+  public ativoOptions: { label: string, value: number }[] = [
+    { label: 'Sim', value: 1 },
+    { label: 'Não', value: 0 }
+  ];
 
-  @Output() pageInfosChange: EventEmitter<{
-    pageSize: number,
-    pageNum: number
-  }> = new EventEmitter();
-  @Output() rowCLickEvent: EventEmitter<any> = new EventEmitter();
-  @Output() menuClickEvent: EventEmitter<any> = new EventEmitter();
-  @Output() redirectEvent: EventEmitter<<%= classify(name) %>ActionTypes> = new EventEmitter();
+  // ex - com o ngFor determinamos a label do select por seu valor de string
+  public turmaOptions: { label: string, value: string }[] = [
+    { label: 'Teórica', value: "T" },
+    { label: 'Prática', value: "P" },
+    { label: 'Ambas', value: "A" }
+  ];
 
-  public colunas: any[] = [];
+  public turmaForm: {
+    descricao: string,
+    turma: string,
+    ativo: number,
+    seletorData: string
+  } = {
+    descricao: '',
+    turma: '',
+    ativo: 1,
+    seletorData: ''
+  };
+
+  public <%= camelize(name) %>Subscription: Subscription = null;
 
   constructor(
-    private permissaoService: PermissaoService
+    public activeModal: NgbActiveModal,
+    private <%= camelize(name) %>Actions: <%= classify(name) %>Actions,
+    private <%= camelize(name) %>Store: <%= classify(name) %>Store,
   ) { }
 
-  ngOnInit() {
-    this.colunas = this.montaColunas();
+
+  handleSalvarClick() {
+    this.isloadingModal = true;
+    this.incluir();
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    this.colunas = this.montaColunas();
+  private incluir(): Promise<void> {
+
+    // montar dto de envio
+    // lembrar de incluir data e sua conversão caso necessario
+
+    this.<%= camelize(name) %>InclusaoDTO = {
+      descricao: this.turmaForm.get('descricao').value,
+      tpTurma: this.turmaForm.get('turma').value,
+      situacao: this.turmaForm.get('ativo').value,
+    }
+
+    return new Promise((resolve, reject) => {
+      this.<%= camelize(name) %>Subscription?.unsubscribe();
+      this.<%= camelize(name) %>Actions.inclui<%= classify(name) %>(this.<%= camelize(name) %>InclusaoDTO);
+
+      this.<%= camelize(name) %>Subscription = this.<%= camelize(name) %>Store
+        .state$
+        .subscribe((data: <%= classify(name) %>State) => {
+          if(data.<%= camelize(name) %>.hasErrors) {
+            const rawMessage: string = data.<%= camelize(name) %>.errorMessage;
+
+            this.exibeToastr(
+              ErrorHandlerUtil.getMessage(rawMessage),
+              ErrorHandlerUtil.getStatus(rawMessage)
+            );
+
+            this.<%= camelize(name) %>Subscription?.unsubscribe();
+            reject();
+            return;
+          }
+          if(!data.<%= camelize(name) %>.isLoading) {
+            this.<%= camelize(name) %>Subscription?.unsubscribe();
+            resolve();
+            // permite capturar o resutltado do modal fechado.
+            this.activeModal.close(this.<%= camelize(name) %>InclusaoDTO);
+          }
+        });
+    });
   }
 
-  public handleMenuClick($event): void {
-    const actionOptions: Map<string, Function> = new Map([
-      ['consultar-<%= dasherize(name) %>', (): void =>  this.exibePageConsultar<%= classify(name) %>($event.row)],
-      ['desativar-<%= dasherize(name) %>', (): void => this.emiteDesativar<%= classify(name) %>Event($event.row)],
-      ['reativar-<%= dasherize(name) %>', (): void => this.emiteReativar<%= classify(name) %>Event($event.row)]
-    ]);
+  public clearToastrs(): void {
+    this.toastrs = [];
+  }
 
-    actionOptions.get($event.action.id)?.bind(this)($event.row);
+  private exibeToastr(mensagem: string, status: TipoMensagemEnum): void {
+    if (this.toastrs.find((toastr) => toastr.mensagem === mensagem)) {
+      return;
+    }
+    this.toastrs.push({
+      mensagem,
+      status
+    });
+
+    window.scroll(0, 0);
     return;
   }
 
-  public handleRowClick($event: any): void {
-    this.rowCLickEvent.emit($event.nroIntRota);
+  isFormValid(): boolean {
+    // implementar lógica necessaria
+    if(this.turmaForm.descricao && this.turmaForm.turma && this.turmaForm.ativo && this.turmaForm.seletorData){
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  public exibePageConsultar<%= classify(name) %>(row: <%= classify(name) %>Lista) {
-    this.menuClickEvent.emit({
-      <%= dasherize(name) %>: row,
-      menuOption: <%= classify(name) %>ActionTypes.CONSULTAR
-    });
-  }
-
-  public emiteDesativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
-    this.menuClickEvent.emit({
-      nroIntRota: row.nroIntRota,
-      menuOption: <%= classify(name) %>ActionTypes.EXCLUIR
-    });
-  }
-
-  public emiteReativar<%= classify(name) %>Event(row: <%= classify(name) %>Lista) {
-    this.menuClickEvent.emit({
-      nroIntRota: row.nroIntRota,
-      menuOption: <%= classify(name) %>ActionTypes.ALTERAR
-    });
-  }
-
-  private montaColunas(): TableColumn[] {
-    const actionOptions: Action[] = [
-      {
-        id: 'consultar-<%= classify(name) %>',
-        show: true,
-        label: 'Detalhes',
-        pathForList: ''
-      },
-      {
-        id: 'desativar-<%= classify(name) %>',
-        show: this.permissaoDesativar,
-        label: 'Desativar',
-        pathForList: 'isPodeDesativar'
-      },
-      {
-        id: 'reativar-<%= classify(name) %>',
-        show: this.permissaoDesativar,
-        label: 'Reativar',
-        pathForList: 'isPodeReativar'
-      }
-    ];
-    return [
-      {
-        type: 'Actions' as ColumnType,
-        isSmall: true,
-        hasEffect: false,
-        hide: false,
-        menuAction: {
-          dropdownPosition: 'right',
-          pathsForList: ['isPodeDesativar', 'isPodeReativar'],
-          actions: actionOptions
-        }
-      },
-      {
-        title: '<%= classify(name) %>',
-        dataPath: 'nome',
-        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
-      },
-      {
-        title: 'Região de Exame',
-        dataPath: 'regiaoExames',
-        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
-      },
-      {
-        title: 'Quantidade Examinador',
-        dataPath: 'qtdExaminador',
-        transform: (valor: number) => this.trataValorNaoInformado(valor)
-      },
-      {
-        title: 'Situação',
-        dataPath: 'situacao',
-        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
-      },
-      {
-        title: 'Participa Distribuição',
-        dataPath: 'distribuicao',
-        transform: (valor: string) => PrvUtil.trataStringNaoInformada(valor)
-      }
-    ];
-  }
-
-  private trataValorNaoInformado(valor: any): string {
-    return ['', null, undefined, ' '].includes(valor) ? 'Não Informado' : valor;
-  }
-
-  public imprimirEvent() {
-    this.redirectEvent.emit(<%= classify(name) %>ActionTypes.IMPRIMIR);
-  }
-
-  public handlePageChange($event): void {
-    this.pageInfos = {
-      ...this.pageInfos,
-      pageNum: parseInt($event.pagina),
-      pageSize: $event.tamanho
-    };
-
-    this.pageInfosChange.emit(this.pageInfos);
-  }
-
-  get totalRegistros(): number {
-    return this.lista<%= classify(name) %>[0]?.totalRegistros;
-  }
-
-  get permissaoDesativar(): boolean {
-    return this.permissaoService.validarPermissao("ROTA", "ALTERA", "PRV");
-  }
 }
 */

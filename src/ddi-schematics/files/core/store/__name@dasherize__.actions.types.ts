@@ -1,4 +1,5 @@
 /*export enum <%= classify(name) %>ActionTypes {
+  PESQUISAR = "<%= dasherize(name) %>/PESQUISAR",
   INCLUIR = "<%= dasherize(name) %>/INCLUIR",
   CONSULTAR = "<%= dasherize(name) %>/CONSULTAR",
   ALTERAR = "<%= dasherize(name) %>/ALTERAR",
