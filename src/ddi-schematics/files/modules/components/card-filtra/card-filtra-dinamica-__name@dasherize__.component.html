@@ -1,0 +1,221 @@
+<div class="card-filtra-<%= dasherize(name) %>-container">
+  <div *ngIf="!!toastrCardFiltra" class="alert-message">
+    <app-prv-toastr
+      [toastrInfo]="toastrCardFiltra"
+      [autoDestroy]="false"
+      [destroyOnClick]="false"
+      [borderShape]="'square'"
+    ></app-prv-toastr>
+  </div>
+
+  <div class="card-inputs-container">
+    <!--<div class="input-field-wrapper">
+      <label
+          for="criteria-field"
+          id="criteria-label"
+          class="input-label"
+      >Critério: *</label>
+      <div class="select-field-wrapper">
+        <div class="select-field-wrapper">
+          <ng-select
+            id="criteira-field"
+            class="select-field"
+            [items]="criteriaOptions"
+            [(ngModel)]="criteriaSelected"
+            (change)="handleSelect('criteria')"
+            #criteria
+          ></ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-wrapper" *ngFor="let field of formFields">
+      <label
+        *ngIf="field.label"
+        [id]="field.labelConfig.id"
+        [for]="field.fieldConfig.id"
+        class="input-label"
+        [ngClass]="{ hidden: !!field.labelConfig.hidden }"
+      >{{ field.label }}</label>
+
+      <div class="input-field-wrapper" *ngIf="field.fieldConfig.field === 'input'">
+        <input
+          [id]="field.fieldConfig.id"
+          class="input-field"
+          [ngClass]="{'invalid-select': isInvalid(field.name), disabled: isDisabled(field.name)}"
+          [type]="field.fieldConfig.type"
+          [placeholder]="field.placeholder"
+          [attr.maxlength]="field.fieldConfig.maxlength"
+          [mask]="field.fieldConfig.mask"
+          [disabled]="isDisabled(field.name)"
+          [(ngModel)]="formData[field.name]"
+          (ngModelChange)="handleChange(field.name)"
+          (change)="handleChange(field.name)"
+        />
+        <div class="checkbox-wrapper" *ngIf="field.hasCheck">
+          <div class="custom-control-inline">
+            <div class="custom-checkbox">
+              <input
+                class="custom-control-input"
+                type="checkbox"
+                [id]="field.fieldConfig.id + '-checkbox'"
+                [value]="true"
+                (change)="handleChange('checkboxModel')"
+                [disabled]="isDisabled(field.checkFieldName)"
+                [(ngModel)]="formData[field.checkFieldName]"
+              />
+              <label
+                [for]="field.fieldConfig.id + '-checkbox'"
+                [id]="field.fieldConfig.id + '-checkbox-label'"
+                class="custom-control-label"
+              >{{field.checkLabel}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="select-field-wrapper" *ngIf="field.fieldConfig.field === 'select'">
+        <ng-select
+          [id]="field.fieldConfig.id"
+          class="select-field"
+          [ngClass]="{'invalid-select': isInvalid(field.name), disabled: isDisabled(field.name)}"
+          [placeholder]="field.placeholder"
+          [disabled]="isDisabled(field.name)"
+          [(ngModel)]="formData[field.name]"
+          (change)="handleSelect(field.name)"
+          [items]="getComboboxItems(field.name)"
+          #select
+        ></ng-select>
+        <div class="checkbox-wrapper" *ngIf="field.hasCheck">
+          <div class="custom-control-inline">
+            <div class="custom-checkbox">
+              <input
+                class="custom-control-input"
+                type="checkbox"
+                [id]="field.fieldConfig.id + '-checkbox'"
+                [value]="true"
+                (change)="handleChange('checkboxModel')"
+                [disabled]="isDisabled(field.checkFieldName)"
+                [(ngModel)]="formData[field.checkFieldName]"
+              />
+              <label
+                [for]="field.fieldConfig.id + '-checkbox'"
+                [id]="field.fieldConfig.id + '-checkbox-label'"
+                class="custom-control-label"
+              >{{field.checkLabel}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-field-wrapper" *ngIf="field.fieldConfig.field === 'calendar'">
+        <input
+          [id]="field.fieldConfig.id"
+          type="text"
+          class="calendar-field"
+          [ngClass]="{'invalid-field': isInvalid(field.name), disabled: isDisabled(field.name)}"
+          [placeholder]="field.placeholder"
+          [attr.maxlength]="field.fieldConfig.maxlength"
+          [disabled]="isDisabled(field.name)"
+          [(ngModel)]="formData[field.name]"
+          (ngModelChange)="handleChange(field.name)"
+          (change)="handleChange(field.name)"
+          ddiDateFormat
+          ngbDatepicker
+          #calendar="ngbDatepicker"
+        >
+        <div class="input-group-append icon-wrapper" (click)="calendar.toggle()">
+          <em class="input-group-text di di-calendar"></em>
+        </div>
+        <div class="checkbox-wrapper" *ngIf="field.hasCheck">
+          <div class="custom-control-inline">
+            <div class="custom-checkbox">
+              <input
+                class="custom-control-input"
+                type="checkbox"
+                [id]="field.fieldConfig.id + '-checkbox'"
+                [value]="true"
+                (change)="handleChange('checkboxModel')"
+                [disabled]="isDisabled(field.checkFieldName)"
+                [(ngModel)]="formData[field.checkFieldName]"
+              />
+              <label
+                [for]="field.fieldConfig.id + '-checkbox'"
+                [id]="field.fieldConfig.id + '-checkbox-label'"
+                class="custom-control-label"
+              >{{field.checkLabel}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="textarea-field-wrapper" *ngIf="field.fieldConfig.field === 'text-area'">
+        <textarea
+          class="textarea-field"
+          [id]="field.fieldConfig.id"
+          type="text"
+          [attr.maxlength]="field.fieldConfig.maxlength"
+          [disabled]="isDisabled(field.name)"
+          [ngClass]="{'invalid-select': isInvalid(field.name), disabled: isDisabled(field.name)}"
+          [(ngModel)]="formData[field.name]"
+          (ngModelChange)="handleChange(field.name)"
+          (change)="handleChange(field.name)"
+        ></textarea>
+        <div class="checkbox-wrapper" *ngIf="field.hasCheck">
+          <div class="custom-control-inline">
+            <div class="custom-checkbox">
+              <input
+                class="custom-control-input"
+                type="checkbox"
+                [id]="field.fieldConfig.id + '-checkbox'"
+                [value]="true"
+                (change)="handleChange('checkboxModel')"
+                [disabled]="isDisabled(field.checkFieldName)"
+                [(ngModel)]="formData[field.checkFieldName]"
+              />
+              <label
+                [for]="field.fieldConfig.id + '-checkbox'"
+                [id]="field.fieldConfig.id + '-checkbox-label'"
+                class="custom-control-label"
+              >{{field.checkLabel}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-field-wrapper cfc-pesquisa-div" *ngIf="field.fieldConfig.field === 'cfc'">
+        <search-field
+            label="CFC: *"
+            class="search-field"
+            placeholder="CFC"
+            [maxlength]="8"
+            [infoLabel]="nomeCFCPesquisado"
+            infoLabelPosition="bottom"
+            [(model)]="formData[field.checkFieldName]"
+            (search)="pesquisarCFC()"
+            (changeInput)="handleChange('cfc')"
+            (input)="handleInput($event); handleChangeModel('cfc')"
+        ></search-field>
+      </div>
+
+      <div
+        class="input-text-separator"
+        *ngIf="field.fieldConfig.field === 'span'">
+        <span>{{ field.label }}</span>
+      </div>
+    </div>-->
+  </div>
+  <div class="card-footer-container">
+    <p class="required-field-info">(*) Campos Obrigatórios</p>
+    <div class="card-buttons-container">
+      <div class="button-wrapper">
+        <button
+          type="button"
+          class="btn btn-primary col-auto button-localizar"
+          [disabled]="localizarDisabled"
+          (click)="handleClick()"
+        >LOCALIZAR</button>
+      </div>
+    </div>
+  </div>
+</div>
