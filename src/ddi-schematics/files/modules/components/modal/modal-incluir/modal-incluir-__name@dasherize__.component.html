@@ -39,17 +39,37 @@
               >Input de text area: *</label>
               <textarea
                 id="descricao"
+                name="descricao"
                 [(ngModel)]="turmaForm.descricao"
                 type="text"
                 class="textarea-field"
                 maxlength="50"
+                required
               ></textarea>
               <span class="input-info">{{ 50 - turmaForm.descricao?.length }} caracteres restantes.</span>
             </div>
             <div class="input-field-wrapper">
               <label
                 class="input-field-label"
-                id="ativo-label"
+                id="versao-label"
+                for="versao"
+              >Versão: *</label>
+              <input
+                id="versao"
+                name="versao"
+                [(ngModel)]="turmaForm.versao"
+                type="number"
+                class="input-field"
+                required
+                min="-2147483648"
+                max="2147483647"
+                required
+              >
+            </div>
+            <div class="input-field-wrapper">
+              <label
+                class="input-field-label"
+                id="turma-label"
                 for="turma"
               >Input de seleção por valor string: *</label>
               <select id="turma" [(ngModel)]="turmaForm.turma" name="turma" class="select-field">
@@ -60,9 +80,9 @@
               <label
                 class="input-field-label"
                 id="ativo-label"
-                for="turma"
+                for="ativo"
               >Input de seleção por valor number: *</label>
-              <select id="turma" [(ngModel)]="turmaForm.ativo" name="turma" class="select-field">
+              <select id="ativo" [(ngModel)]="turmaForm.ativo" name="ativo" class="select-field">
                 <option *ngFor="let ativo of ativoOptions" [value]="ativoOption.value">{{ativoOption.label}}</option>
               </select>
             </div>

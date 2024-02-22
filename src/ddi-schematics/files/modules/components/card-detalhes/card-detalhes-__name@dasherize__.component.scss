@@ -41,9 +41,10 @@
 
     .display-row {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 1rem;
       padding: 2rem 2rem 0 2rem;
+      flex-wrap: wrap;
 
       .required-field-info {
         color: $red;
@@ -66,9 +67,7 @@
         .input-field-wrapper {
           display: flex;
           flex-direction: column;
-          justify-content: space-around;
-          height: fit-content;
-          width: 40%;
+          align-items: flex-start;
 
           .hidden {
             visibility: hidden;
@@ -88,6 +87,9 @@
             height: 40px;
             border-radius: 2.5px;
           }
+          .disabled {
+            background-color: #E2E2E2;
+          }
           .select-field {
             ::ng-deep .ng-select-container {
               height: 40px;
@@ -99,7 +101,55 @@
             }
           }
         }
+
+        .calendar-field-wrapper {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+  
+          .calendar-field {
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid $dark;
+            padding-left: 15px;
+            height: 40px;
+            border-radius: 2.5px;
+            width: 180px;
+          }
+          .icon-wrapper {
+            width: fit-content;
+            cursor: pointer;
+  
+            .di-calendar, .fa-search {
+              border: 1px solid $dark;
+              border-radius: 0;
+              background-color: transparent;
+            }
+            .disabled {
+              background-color: $gray-100;
+              cursor: auto;
+            }
+          }
+          .disabled {
+            background-color: #E2E2E2;
+          }
+        }
+
       }
+
+      .checkbox-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-content: flex-end;
+        width: 250px;
+        justify-content: flex-end;
+
+        ::ng-deep .custom-control-label {
+          cursor: pointer;
+        }
+      }
+
     }
     .control-fields-container {
       display: flex;

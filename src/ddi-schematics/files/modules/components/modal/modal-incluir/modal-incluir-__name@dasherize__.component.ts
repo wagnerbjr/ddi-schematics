@@ -40,11 +40,13 @@ export class ModalIncluir<%= classify(name) %>Component {
     turma: string,
     ativo: number,
     seletorData: string
+    versao: string
   } = {
     descricao: '',
     turma: '',
     ativo: 1,
     seletorData: ''
+    versao: ''
   };
 
   public <%= camelize(name) %>Subscription: Subscription = null;
@@ -67,9 +69,9 @@ export class ModalIncluir<%= classify(name) %>Component {
     // lembrar de incluir data e sua conversão caso necessario
 
     this.<%= camelize(name) %>InclusaoDTO = {
-      descricao: this.turmaForm.get('descricao').value,
-      tpTurma: this.turmaForm.get('turma').value,
-      situacao: this.turmaForm.get('ativo').value,
+      descricao: this.turmaForm.descricao,
+      tpTurma: this.turmaForm.turma,
+      situacao: this.turmaForm.ativo,
     }
 
     return new Promise((resolve, reject) => {

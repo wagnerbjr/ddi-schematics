@@ -64,6 +64,39 @@
             />
         </div>
       </div>
+
+      <!--Calendario agrega input e toggle
+        <div class="input-field-wrapper">
+          <label
+            for="data-inicio"
+            id="label-data-inicio"
+            class="input-field-label">Data Início
+          </label>
+          <div class="calendar-field-wrapper">
+            <input
+              id="data-inicio"
+              type="text"
+              maxlength="10"
+              class="calendar-field"
+              [weekdays]="true"
+              [markDisabled]="isDayDisabled"   --
+              [ngClass]="{ 'disabled': !isEdicao }"
+              [disabled]="!isEdicao"
+              [(ngModel)]="formDateFields.dataInicio"
+              (change)="handleChange()"
+              ddiDateFormat
+              ngbDatepicker
+              #dataInicio="ngbDatepicker"
+            />
+            <div class="input-group-append icon-wrapper"
+            (click)="isEdicao ? dataInicio.toggle() : false"
+            [ngClass]="{ 'disabled': !isEdicao }">
+              <em class="input-group-text di di-calendar" [ngClass]="{ 'disabled': !isEdicao }"></em>
+            </div>
+          </div>
+        </div>
+
+      -->
     
       <p class="required-field-info">(*) Campos Obrigatórios</p>
 

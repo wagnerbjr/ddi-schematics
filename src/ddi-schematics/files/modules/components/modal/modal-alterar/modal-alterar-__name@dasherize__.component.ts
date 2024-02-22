@@ -28,7 +28,8 @@ export class ModalAlterar<%= classify(name) %>Component implements OnInit {
     descricao: string,
     turma: string,
     ativo: number,
-    seletorData: string
+    seletorData: string,
+    versao: string,
   } = {
     descricao: '',
     turma: '',
@@ -101,6 +102,7 @@ export class ModalAlterar<%= classify(name) %>Component implements OnInit {
             this.turmaForm.descricao = this.provaPraticaDetalhesDTO.descricao;
             this.turmaForm.turma = this.provaPraticaDetalhesDTO.tpTurma;
             this.turmaForm.ativo = this.provaPraticaDetalhesDTO.situacao;
+            this.turmaForm.versao = this.provaPraticaDetalhesDTO.versao;
             // NÃO IMPLEMENTADO - retornar o valor do DTO para seletor de DATA com conversão necessária
 
             // exemplo de bloqueio de edição caso necessário
@@ -124,6 +126,7 @@ export class ModalAlterar<%= classify(name) %>Component implements OnInit {
       descricao: this.turmaForm.descricao,
       tpTurma: this.turmaForm.turma,
       situacao: this.turmaForm.ativo,
+      versao: this.turmaForm.ativo,
     }
 
     // NÃO IMPLEMENTADO - passar o valor para o DTO para o seletor de DATA com a conversão necessária
